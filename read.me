@@ -1,0 +1,1350 @@
+# Guia de apresentacao do codigo
+
+Este arquivo explica, em linguagem de apresentacao, como o projeto foi organizado e como cada parte do codigo contribui para o recomendador de disciplinas de Engenharia de Sistemas da UFMG.
+
+## 1. Objetivo do projeto
+
+O objetivo do projeto e recomendar disciplinas para um aluno com base em:
+
+- interesses informados em linguagem natural;
+- disciplinas ja concluidas;
+- prerequisitos das disciplinas;
+- dificuldade estimada;
+- horarios disponiveis;
+- similaridade semantica entre o perfil do aluno e as ementas.
+
+Em vez de usar apenas filtros fixos, o sistema combina NLP com regras academicas. A parte de NLP identifica disciplinas semanticamente proximas ao interesse do aluno. Depois, as regras removem recomendacoes inviaveis, como materias com prerequisito nao cumprido ou conflito de horario.
+
+## 2. Visao geral da arquitetura
+
+O projeto pode ser explicado em cinco camadas:
+
+1. Dados curados
+   - Arquivos em `data/`.
+   - Guardam as disciplinas, ementas, horarios, prerequisitos e dificuldade.
+
+2. Preparacao dos dados
+   - Codigo em `src/data_curation.py`.
+   - Carrega o JSON e transforma cada disciplina em texto utilizavel pelo modelo.
+
+3. Busca semantica com SBERT
+   - Codigo em `src/sbert_encoder.py`.
+   - Converte textos em embeddings numericos e calcula similaridade.
+
+4. Regras de recomendacao
+   - Codigo em `src/recommender_rules.py`.
+   - Aplica prerequisitos, dificuldade maxima e evita choques de horario.
+
+5. Interfaces de uso
+   - `src/demo_streamlit.py`: interface principal em Streamlit.
+   - `src/demo_gradio.py`: interface alternativa em Gradio.
+   - `notebooks/TP3_Classificador_Disciplinas_UFMG.ipynb`: notebook de demonstracao e experimentacao.
+
+## 3. Fluxo completo do funcionamento
+
+O fluxo do Streamlit segue esta ordem:
+
+1. Usuario informa seus interesses
+   - Exemplo: "inteligencia artificial, aprendizado de maquina e analise de dados".
+
+2. Usuario informa disciplinas ja cursadas
+   - Exemplo: `MAT001 MAT038 DCC203 DCC217`.
+
+3. O sistema monta o perfil textual do aluno
+   - As disciplinas concluidas sao transformadas em uma descricao textual.
+   - Esse texto e combinado com os interesses digitados.
+
+4. O modelo SBERT gera embedding da consulta
+   - O texto do aluno vira um vetor numerico.
+
+5. O sistema compara esse vetor com as disciplinas
+   - Cada disciplina tambem tem um embedding baseado em nome, area e ementa.
+   - A busca semantica retorna as disciplinas mais parecidas.
+
+6. O sistema remove disciplinas ja concluidas
+   - Uma disciplina cursada pelo aluno nao deve ser recomendada novamente.
+
+7. O sistema aplica prerequisitos
+   - Uma disciplina so entra se todos os prerequisitos estiverem na lista de concluidas.
+
+8. O sistema aplica dificuldade e horario
+   - Seleciona disciplinas enquanto a soma das dificuldades nao ultrapassa o limite.
+   - Evita adicionar materias com choque de horario.
+
+9. A interface mostra o resultado
+   - Aba de recomendacao final.
+   - Aba de ranking semantico.
+   - Aba de horarios sugeridos.
+
+## 4. Explicacao dos arquivos principais
+
+### `src/config.py`
+
+Este arquivo centraliza configuracoes usadas pelo projeto.
+
+Principais itens:
+
+- `PROJECT_ROOT`: identifica a raiz do projeto.
+- `DATA_DIR`: caminho para a pasta `data`.
+- `MODELS_DIR`: caminho para modelos treinados ou salvos.
+- `OUTPUTS_DIR`: caminho para saidas geradas.
+- `DISCIPLINAS_JSON`: arquivo com as disciplinas curadas.
+- `DIFICULDADE_CSV`: arquivo com avaliacoes de dificuldade.
+- `MODEL_NAME`: nome do modelo usado como base.
+
+Na apresentacao, este arquivo pode ser explicado como o ponto unico de configuracao. Ele evita caminhos soltos espalhados pelo codigo.
+
+### `data/disciplinas_engsis.json`
+
+Este e o dataset principal do sistema.
+
+Ele contem informacoes como:
+
+- codigo da disciplina;
+- nome;
+- ementa;
+- area de conhecimento;
+- prerequisitos;
+- horarios;
+- dificuldade geral;
+- periodo sugerido.
+
+Esse arquivo e a base para a recomendacao. Sem ele, o sistema nao teria o catalogo de disciplinas para comparar com o perfil do aluno.
+
+### `data/dificuldade_engsis.csv`
+
+Este arquivo contem informacoes de dificuldade das disciplinas.
+
+Ele e usado para controlar a carga sugerida ao aluno. A ideia nao e apenas recomendar as materias mais parecidas semanticamente, mas tambem montar uma grade equilibrada.
+
+## 5. Preparacao e curadoria dos dados
+
+### `src/data_curation.py`
+
+Este modulo carrega e prepara os dados das disciplinas.
+
+Funcoes principais:
+
+#### `load_disciplines()`
+
+Carrega o arquivo `disciplinas_engsis.json` e transforma os dados em um `DataFrame` do pandas.
+
+Na pratica:
+
+- abre o JSON;
+- le os dados;
+- cria uma tabela pandas.
+
+#### `get_discipline_table()`
+
+Retorna a tabela completa de disciplinas.
+
+Essa funcao existe para deixar o resto do projeto independente do formato de armazenamento. Se no futuro os dados vierem de banco de dados, API ou CSV, a interface da funcao pode continuar parecida.
+
+#### `get_discipline_text(row)`
+
+Transforma uma disciplina em texto rico para o modelo.
+
+O texto combina:
+
+- nome da disciplina;
+- area de conhecimento;
+- ementa.
+
+Exemplo conceitual:
+
+```text
+Inteligencia Artificial. Area: Computacao. Ementa da disciplina...
+```
+
+Esse texto e o que sera convertido em embedding pelo modelo SBERT.
+
+#### `get_completed_profile_text(df, completed_codes)`
+
+Monta uma descricao textual das disciplinas ja concluidas pelo aluno.
+
+Isso permite representar o historico academico como texto. Depois, esse texto e unido aos interesses digitados pelo usuario.
+
+## 6. Busca semantica com SBERT
+
+### `src/sbert_encoder.py`
+
+Este modulo e responsavel por transformar textos em vetores e buscar disciplinas parecidas.
+
+O modelo usado e definido em `config.py`:
+
+```python
+MODEL_NAME = "neuralmind/bert-base-portuguese-cased"
+```
+
+Esse modelo e adequado ao portugues, o que faz sentido porque as ementas e os textos do projeto estao em portugues.
+
+Funcoes principais:
+
+#### `load_sbert_model()`
+
+Carrega o modelo Sentence-BERT.
+
+Na primeira execucao, pode demorar, porque o modelo precisa ser carregado e possivelmente baixado.
+
+#### `encode_texts(model, texts, batch_size=32)`
+
+Recebe uma lista de textos e devolve embeddings.
+
+Embedding e uma representacao numerica de significado. Textos semanticamente parecidos tendem a ter vetores proximos.
+
+#### `encode_disciplines(model, df)`
+
+Gera embeddings para todas as disciplinas.
+
+Fluxo interno:
+
+1. pega cada linha da tabela;
+2. transforma a disciplina em texto usando `get_discipline_text`;
+3. passa todos os textos pelo modelo;
+4. devolve os vetores.
+
+#### `semantic_search(query_embedding, corpus_embeddings, top_k=10)`
+
+Compara o embedding da consulta com os embeddings das disciplinas.
+
+Ela retorna os `top_k` resultados mais parecidos semanticamente.
+
+Na apresentacao, esta funcao e o coracao da busca inteligente. Ela permite que o aluno escreva "quero aprender IA e dados", mesmo que a disciplina nao tenha exatamente essas palavras no nome.
+
+## 7. Regras academicas da recomendacao
+
+### `src/recommender_rules.py`
+
+Este modulo transforma uma lista semanticamente boa em uma grade viavel.
+
+Sem essas regras, o sistema poderia recomendar uma disciplina interessante, mas impossivel para o aluno naquele momento.
+
+Funcoes principais:
+
+#### `prerequisites_satisfied(candidate_row, completed_codes)`
+
+Verifica se todos os prerequisitos da disciplina candidata estao entre as materias ja cursadas.
+
+Exemplo:
+
+- Disciplina candidata exige `DCC203`.
+- Se o aluno cursou `DCC203`, passa.
+- Se nao cursou, a disciplina e removida.
+
+#### `filter_recommended_candidates(candidates, completed_codes)`
+
+Aplica a regra de prerequisitos em todas as candidatas.
+
+Ela recebe a lista de disciplinas vindas da busca semantica e devolve apenas as disciplinas academicamente possiveis.
+
+#### `get_schedule_slots(row)`
+
+Extrai os horarios de uma disciplina.
+
+O retorno e uma lista de pares:
+
+```text
+(dia, turno)
+```
+
+Isso permite comparar horarios entre varias disciplinas.
+
+#### `has_schedule_conflict(candidate_slots, selected_slots)`
+
+Verifica se uma disciplina candidata conflita com horarios ja selecionados.
+
+#### `filter_by_schedule(candidates, already_selected_slots)`
+
+Remove disciplinas com conflito de horario.
+
+#### `greedy_balance_by_difficulty(...)`
+
+Seleciona as disciplinas finais usando uma estrategia gulosa.
+
+Ela considera:
+
+- maior score semantico;
+- menor dificuldade quando ha empate ou ordenacao secundaria;
+- limite maximo de dificuldade;
+- numero maximo de disciplinas;
+- conflito de horario.
+
+O algoritmo percorre as candidatas ordenadas e adiciona uma disciplina se ela respeitar as restricoes.
+
+Na apresentacao, vale destacar que o sistema nao escolhe apenas as materias mais parecidas. Ele tenta montar uma grade equilibrada e possivel.
+
+## 8. Interface Streamlit
+
+### `src/demo_streamlit.py`
+
+Este e o arquivo principal para demonstracao visual.
+
+Ele integra:
+
+- carregamento dos dados;
+- modelo SBERT;
+- busca semantica;
+- regras academicas;
+- exibicao em tela.
+
+Funcoes principais:
+
+#### `load_resources()`
+
+Carrega os recursos pesados:
+
+- tabela de disciplinas;
+- modelo SBERT;
+- embeddings das disciplinas.
+
+Ela usa:
+
+```python
+@st.cache_resource
+```
+
+Isso e importante porque evita recarregar o modelo a cada interacao. O modelo e pesado, entao o cache melhora muito a experiencia.
+
+#### `parse_completed_codes(completed_text, valid_codes)`
+
+Interpreta o campo de disciplinas concluidas digitado pelo usuario.
+
+Aceita codigos separados por:
+
+- espaco;
+- virgula;
+- ponto e virgula.
+
+Tambem separa codigos validos e invalidos. Se o usuario digitar um codigo que nao existe na base, o app avisa.
+
+#### `build_recommendation_table(df)`
+
+Transforma o resultado final em uma tabela amigavel para exibicao.
+
+Colunas mostradas:
+
+- codigo;
+- disciplina;
+- score semantico;
+- dificuldade;
+- horarios.
+
+#### `build_schedule_text(df)`
+
+Monta o texto da aba de horarios.
+
+Mostra cada horario associado a disciplina recomendada.
+
+#### `recommend(...)`
+
+Esta e a principal funcao de negocio da interface.
+
+Ela executa todo o pipeline:
+
+1. carrega recursos;
+2. valida codigos de disciplinas concluidas;
+3. monta o perfil textual;
+4. gera embedding da consulta;
+5. faz busca semantica;
+6. remove disciplinas ja cursadas;
+7. filtra prerequisitos;
+8. aplica dificuldade e horarios;
+9. retorna ranking, recomendacao final e horarios.
+
+#### `render_flow()`
+
+Mostra na tela um fluxo simples em tres passos:
+
+1. Perfil;
+2. Busca;
+3. Filtros.
+
+Essa parte ajuda o usuario e tambem facilita a explicacao durante a apresentacao.
+
+#### `main()`
+
+Monta a pagina Streamlit.
+
+Elementos principais:
+
+- titulo;
+- descricao do sistema;
+- barra lateral com formulario;
+- sliders de parametros;
+- botao `Recomendar`;
+- abas de resultado.
+
+Abas:
+
+- `Recomendacao final`: mostra a grade sugerida.
+- `Ranking semantico`: mostra as disciplinas mais similares antes dos filtros finais.
+- `Horarios`: mostra a grade horaria sugerida.
+
+## 9. Interface Gradio
+
+### `src/demo_gradio.py`
+
+Este arquivo tem uma interface alternativa usando Gradio.
+
+Ele segue uma logica parecida com o Streamlit:
+
+- usuario informa interesses;
+- usuario informa concluidas;
+- sistema roda busca semantica;
+- aplica filtros;
+- mostra resultado.
+
+O Streamlit foi adicionado porque e mais comum para demonstracoes de dados e permite uma organizacao visual simples em sidebar, abas e tabelas.
+
+## 10. Geracao de perfis sinteticos
+
+### `src/synthetic_profile_generator.py`
+
+Este modulo cria perfis sinteticos de alunos e pares de treino.
+
+Por que isso e necessario?
+
+Como nem sempre existe uma grande base real de alunos com historico e escolhas futuras, o projeto gera exemplos artificiais coerentes com a grade.
+
+Principais ideias:
+
+- um perfil representa disciplinas ja cursadas;
+- uma candidata e uma disciplina que pode ou nao ser recomendada;
+- o label indica se aquela candidata faz sentido para aquele perfil.
+
+Funcoes importantes:
+
+#### `build_profile_text(...)`
+
+Monta um texto do perfil a partir das disciplinas cursadas.
+
+#### `generate_period_prefix_profiles(...)`
+
+Cria perfis acumulando disciplinas por periodo.
+
+Exemplo conceitual:
+
+- perfil ate periodo 1;
+- perfil ate periodo 2;
+- perfil ate periodo 3.
+
+Isso simula alunos em diferentes momentos do curso.
+
+#### `generate_elective_variants(...)`
+
+Cria variacoes com optativas, quando essa informacao existe na base.
+
+#### `generate_labelled_pairs(...)`
+
+Gera pares rotulados:
+
+```text
+(perfil do aluno, disciplina candidata, label)
+```
+
+O label positivo depende de regras como:
+
+- prerequisitos cumpridos;
+- disciplina do proximo periodo;
+- alinhamento com trilhas ou optativas.
+
+#### `split_by_profile(...)`
+
+Divide os dados em treino, validacao e teste sem misturar perfis.
+
+Isso evita vazamento de dados. O mesmo perfil nao deve aparecer ao mesmo tempo no treino e no teste.
+
+#### `generate_sbert_training_pairs(...)`
+
+Cria pares para fine-tuning do SBERT usando similaridade.
+
+## 11. Treinamento do classificador BERT
+
+### `src/train_bert_classifier.py`
+
+Este modulo contem o treinamento de um classificador BERT para decidir se uma disciplina candidata e adequada para um perfil.
+
+Ele nao e o unico componente do sistema, mas faz parte da arquitetura de IA proposta.
+
+Componentes principais:
+
+#### `PairTextDataset`
+
+Dataset PyTorch que recebe pares:
+
+```text
+texto do perfil + texto da disciplina candidata
+```
+
+Ele usa o tokenizer do BERT para transformar os textos em tensores.
+
+#### `TrainingStage`
+
+Representa uma etapa de treinamento.
+
+O projeto usa treinamento progressivo em tres etapas:
+
+1. `feature_extraction`
+   - congela o encoder BERT;
+   - treina apenas a cabeca classificadora.
+
+2. `partial_unfreeze`
+   - libera as ultimas camadas;
+   - ajusta parte do modelo.
+
+3. `full_finetuning`
+   - libera todos os parametros;
+   - refina o modelo completo.
+
+Essa estrategia reduz risco de overfitting e torna o treinamento mais estavel.
+
+#### `freeze_encoder(model)`
+
+Congela os parametros do encoder BERT.
+
+#### `unfreeze_last_layers(model, num_layers=2)`
+
+Libera apenas as ultimas camadas do encoder.
+
+#### `unfreeze_all(model)`
+
+Libera todos os parametros para fine-tuning completo.
+
+#### `create_model()`
+
+Cria um `BertForSequenceClassification`.
+
+#### `create_tokenizer()`
+
+Carrega o tokenizer correspondente ao modelo.
+
+#### `train_stage(...)`
+
+Executa uma epoca de treino.
+
+#### `predict(...)`
+
+Gera predicoes e probabilidades.
+
+#### `evaluate_model(...)`
+
+Calcula metricas como acuracia e F1.
+
+#### `fit_three_stage_model(...)`
+
+Executa o treinamento completo em tres etapas.
+
+#### `fine_tune_sbert(...)`
+
+Permite ajustar o SBERT usando pares de textos e `CosineSimilarityLoss`.
+
+Na apresentacao, este modulo mostra que o projeto nao depende apenas de busca simples: ele tambem tem base para treinamento supervisionado e comparacao de modelos.
+
+## 12. Baseline sem texto
+
+### `src/baseline_no_text.py`
+
+Este modulo implementa um modelo de comparacao usando apenas features estruturais, sem NLP.
+
+Por que ter baseline?
+
+Porque precisamos saber se o uso de texto e embeddings realmente agrega valor. O baseline serve como referencia.
+
+Features usadas:
+
+- quantidade de disciplinas concluidas;
+- prerequisitos cumpridos;
+- mesma trilha ou grupo;
+- disciplina do proximo periodo;
+- tamanho do texto da disciplina;
+- tamanho do texto do perfil.
+
+Modelo usado:
+
+- regressao logistica;
+- `StandardScaler` para normalizacao;
+- `class_weight="balanced"` para lidar com classes desbalanceadas.
+
+Funcoes:
+
+- `build_structural_features(...)`: cria as features numericas.
+- `train_baseline(...)`: treina a regressao logistica.
+- `evaluate_baseline(...)`: calcula metricas.
+
+## 13. Avaliacao dos modelos
+
+### `src/evaluate.py`
+
+Este modulo concentra metricas e graficos de avaliacao.
+
+Metricas de classificacao:
+
+- acuracia;
+- precisao;
+- recall;
+- F1-score;
+- matriz de confusao.
+
+Metricas de busca semantica:
+
+- `Precision@k`: proporcao de relevantes entre os k retornados.
+- `Recall@k`: proporcao dos relevantes encontrados.
+- `MRR`: posicao media do primeiro resultado relevante.
+
+Funcoes principais:
+
+- `classification_metrics(...)`;
+- `confusion_dataframe(...)`;
+- `plot_confusion_matrix(...)`;
+- `semantic_search_metrics(...)`;
+- `compare_models(...)`.
+
+Na apresentacao, este arquivo mostra como o projeto mede desempenho, e nao apenas gera recomendacoes sem validacao.
+
+## 14. Notebook principal
+
+### `notebooks/TP3_Classificador_Disciplinas_UFMG.ipynb`
+
+O notebook serve para:
+
+- demonstrar o pipeline;
+- testar cenarios;
+- validar resultados;
+- apresentar exemplos de perfis de alunos;
+- comparar recomendacoes.
+
+Ele e bom para desenvolvimento e explicacao passo a passo.
+
+A interface Streamlit, por outro lado, e melhor para demonstracao interativa.
+
+## 15. Script de construcao dos dados
+
+### `scripts/build_discipline_data.py`
+
+Este script e usado para construir ou atualizar a base de disciplinas.
+
+Ele representa a etapa de ETL do projeto:
+
+- extrair dados;
+- transformar em estrutura padronizada;
+- salvar em JSON enriquecido.
+
+Na apresentacao, ele pode ser citado como a origem da curadoria dos dados.
+
+## 16. Como rodar o Streamlit
+
+### Windows PowerShell
+
+```powershell
+cd C:\Users\archa\OneDrive\Documentos\GuaraTrainer\TP-FundAI\TP-IA\tp3-ufmg-recomendador
+.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\python.exe -m streamlit run src\demo_streamlit.py
+```
+
+### macOS ou Linux
+
+```bash
+cd /caminho/para/tp3-ufmg-recomendador
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -e .
+python -m streamlit run src/demo_streamlit.py
+```
+
+Depois, abrir:
+
+```text
+http://localhost:8501
+```
+
+Observacao importante: o app deve ser rodado com o Python do ambiente virtual `.venv`. Se for rodado pelo Python global, pode aparecer erro como:
+
+```text
+ModuleNotFoundError: No module named 'torch'
+```
+
+## 17. Como explicar o diferencial do projeto
+
+Pontos fortes para falar na apresentacao:
+
+1. O sistema entende interesses em linguagem natural.
+   - O aluno nao precisa escolher area em uma lista fixa.
+
+2. O sistema usa ementas reais.
+   - As disciplinas sao comparadas pelo conteudo textual.
+
+3. A recomendacao nao e apenas semantica.
+   - Tambem respeita prerequisitos, dificuldade e horario.
+
+4. Ha separacao clara de responsabilidades.
+   - Dados, modelo, regras e interface estao em arquivos separados.
+
+5. Existe base para avaliacao.
+   - O projeto inclui metricas, baseline e estrutura de treinamento.
+
+6. A interface e demonstravel.
+   - O Streamlit permite apresentar o sistema de forma interativa.
+
+## 18. Roteiro sugerido para apresentacao
+
+Uma ordem boa para apresentar:
+
+1. Problema
+   - Alunos precisam escolher proximas disciplinas considerando interesse, prerequisitos, dificuldade e horarios.
+
+2. Solucao proposta
+   - Recomendador com NLP + regras academicas.
+
+3. Dados
+   - Mostrar `disciplinas_engsis.json` e explicar ementas, horarios e prerequisitos.
+
+4. Busca semantica
+   - Explicar embeddings e similaridade.
+
+5. Filtros
+   - Explicar por que nao basta recomendar pelo score.
+
+6. Interface
+   - Abrir Streamlit e mostrar o fluxo.
+
+7. Resultado
+   - Mostrar ranking semantico, recomendacao final e horarios.
+
+8. Avaliacao
+   - Citar baseline, metricas e possibilidades de comparacao.
+
+9. Conclusao
+   - O sistema gera recomendacoes mais personalizadas e viaveis para o aluno.
+
+## 19. Exemplo de fala curta
+
+"Nosso projeto implementa um recomendador de disciplinas para Engenharia de Sistemas da UFMG. O aluno informa seus interesses em linguagem natural e as disciplinas que ja cursou. O sistema transforma tanto o perfil do aluno quanto as ementas das disciplinas em embeddings usando SBERT. Depois, calcula similaridade semantica para encontrar as disciplinas mais relacionadas. Em seguida, aplica regras academicas para remover materias com prerequisitos pendentes, excesso de dificuldade ou conflito de horario. Por fim, a interface Streamlit mostra a recomendacao final, o ranking semantico e a grade de horarios."
+
+## 20. Limitacoes e melhorias futuras
+
+Limitacoes:
+
+- A qualidade depende da curadoria das ementas e prerequisitos.
+- A dificuldade pode variar conforme professor, semestre e perfil do aluno.
+- O modelo semantico pode recomendar conteudos parecidos, mas ainda precisa das regras para garantir viabilidade.
+
+Melhorias futuras:
+
+- Salvar embeddings em disco para acelerar o primeiro carregamento.
+- Adicionar login ou perfil persistente do aluno.
+- Permitir selecionar disciplinas concluidas em uma lista visual.
+- Integrar dados reais atualizados do sistema academico.
+- Treinar e comparar o classificador BERT com mais dados reais.
+- Explicar cada recomendacao com justificativas mais detalhadas.
+
+## 21. Resumo final
+
+O projeto combina tecnicas de inteligencia artificial com regras praticas da grade curricular. O SBERT encontra disciplinas semanticamente proximas aos interesses do aluno, enquanto os filtros garantem que a recomendacao seja possivel dentro das restricoes academicas. A interface Streamlit transforma o notebook em uma aplicacao interativa, facilitando a demonstracao e o uso do sistema.
+
+## 22. Metodologia usada no projeto
+
+A metodologia do projeto foi pensada para resolver um problema pratico: recomendar disciplinas que sejam ao mesmo tempo interessantes para o aluno e possiveis dentro da estrutura curricular.
+
+O processo geral foi dividido em etapas:
+
+1. Levantamento dos dados
+   - Primeiro foi necessario montar uma base com as disciplinas do curso.
+   - Essa base precisava conter nome, codigo, ementa, area, prerequisitos, horarios e dificuldade.
+
+2. Curadoria e padronizacao
+   - Os dados foram organizados em formato estruturado.
+   - O arquivo principal final ficou em `data/disciplinas_engsis.json`.
+   - A dificuldade ficou associada as disciplinas para permitir balanceamento da grade.
+
+3. Representacao textual
+   - Cada disciplina foi transformada em um texto unico.
+   - Esse texto junta nome, area de conhecimento e ementa.
+   - A ideia e representar o conteudo pedagogico da disciplina.
+
+4. Representacao do aluno
+   - O aluno e representado por dois tipos de informacao:
+     - disciplinas ja cursadas;
+     - interesses digitados em linguagem natural.
+   - As disciplinas cursadas ajudam a descrever o historico academico.
+   - Os interesses ajudam a capturar preferencia pessoal.
+
+5. Busca semantica
+   - O texto do aluno e convertido em embedding.
+   - Os textos das disciplinas tambem sao convertidos em embeddings.
+   - O sistema compara esses vetores para encontrar disciplinas semanticamente proximas.
+
+6. Aplicacao de regras academicas
+   - Depois da busca semantica, entram os filtros.
+   - O sistema remove disciplinas ja cursadas.
+   - Remove disciplinas com prerequisitos pendentes.
+   - Evita choque de horario.
+   - Controla a carga por dificuldade.
+
+7. Apresentacao do resultado
+   - O resultado final e mostrado na interface Streamlit.
+   - O usuario consegue ver a recomendacao final, o ranking semantico e os horarios.
+
+Em resumo, a metodologia combina uma etapa estatistica/semantica com uma etapa deterministica baseada em regras. A busca semantica encontra possibilidades interessantes; as regras academicas garantem viabilidade.
+
+## 23. Algoritmos e tecnicas usados
+
+O projeto usa diferentes tecnicas em partes diferentes do pipeline.
+
+### 23.1 Sentence-BERT / SBERT
+
+O principal algoritmo de busca textual e o Sentence-BERT.
+
+O SBERT e usado para transformar textos em vetores numericos chamados embeddings. Esses vetores representam o significado aproximado do texto.
+
+No projeto, ele e usado para:
+
+- codificar o perfil do aluno;
+- codificar as ementas das disciplinas;
+- comparar a proximidade semantica entre perfil e disciplinas.
+
+Intuicao:
+
+- Se o aluno escreve "quero aprender machine learning e inteligencia artificial", disciplinas de IA, aprendizado de maquina, dados e computacao devem ficar mais proximas no espaco vetorial.
+- Mesmo que a disciplina nao tenha exatamente as mesmas palavras, o embedding pode capturar semelhanca de significado.
+
+### 23.2 Similaridade de cosseno
+
+A comparacao entre embeddings e feita por similaridade de cosseno.
+
+Essa medida compara a direcao entre dois vetores, e nao apenas a distancia absoluta.
+
+No projeto:
+
+- um vetor representa o perfil do aluno;
+- outro vetor representa uma disciplina;
+- quanto maior a similaridade, maior a afinidade semantica.
+
+Resultado esperado:
+
+- disciplinas mais alinhadas ao interesse aparecem no topo do ranking.
+
+### 23.3 Top-K semantic search
+
+Depois de calcular similaridade, o sistema seleciona os `top_k` melhores resultados.
+
+Exemplo:
+
+- se `top_k = 20`, o sistema pega as 20 disciplinas mais parecidas semanticamente antes de aplicar os filtros academicos.
+
+Isso e importante porque a busca semantica e a primeira etapa. Ela cria uma lista de candidatas, mas ainda nao decide a grade final.
+
+### 23.4 Filtros por prerequisitos
+
+O filtro de prerequisitos e uma regra deterministica.
+
+Uma disciplina candidata so pode ser recomendada se todos os seus prerequisitos estiverem dentro das disciplinas ja concluidas pelo aluno.
+
+Intuicao:
+
+- Nao adianta recomendar uma disciplina interessante se o aluno ainda nao pode cursa-la.
+
+### 23.5 Algoritmo guloso para balanceamento
+
+O projeto usa uma estrategia gulosa em `greedy_balance_by_difficulty`.
+
+Funcionamento:
+
+1. Ordena as candidatas por maior score semantico.
+2. Percorre a lista nessa ordem.
+3. Adiciona uma disciplina se:
+   - nao ultrapassar o limite de dificuldade;
+   - nao exceder o numero maximo de disciplinas;
+   - nao gerar conflito de horario.
+
+Esse algoritmo e simples, rapido e facil de explicar.
+
+Ele nao garante necessariamente a solucao matematica otima global, mas e adequado para a proposta porque:
+
+- o numero de disciplinas e pequeno;
+- a recomendacao precisa ser interativa;
+- a regra e transparente;
+- o usuario entende por que uma disciplina entrou ou saiu.
+
+### 23.6 Regressao logistica como baseline
+
+O projeto tambem possui um baseline estrutural em `baseline_no_text.py`.
+
+Esse baseline nao usa texto semantico. Ele usa features numericas e booleanas, como:
+
+- quantidade de disciplinas concluidas;
+- prerequisitos cumpridos;
+- disciplina do proximo periodo;
+- tamanho do texto do perfil;
+- tamanho do texto da disciplina.
+
+O objetivo do baseline e comparar:
+
+- o quanto uma abordagem simples consegue resolver;
+- o quanto o uso de NLP pode melhorar a recomendacao.
+
+### 23.7 BERT classificador
+
+O arquivo `train_bert_classifier.py` implementa uma estrutura de classificador BERT.
+
+Ele recebe pares:
+
+```text
+perfil do aluno + disciplina candidata
+```
+
+E tenta prever se aquela disciplina e adequada ou nao.
+
+O treinamento e progressivo:
+
+1. Treina apenas a cabeca classificadora.
+2. Libera as ultimas camadas do BERT.
+3. Libera o modelo inteiro.
+
+Essa tecnica ajuda a evitar mudancas bruscas no modelo e torna o fine-tuning mais controlado.
+
+## 24. Como os dados foram buscados e organizados
+
+Os dados foram reunidos a partir de fontes relacionadas a grade e as disciplinas do curso de Engenharia de Sistemas da UFMG.
+
+O projeto considera principalmente:
+
+- ementas das disciplinas;
+- grade curricular;
+- horarios de oferta;
+- prerequisitos;
+- dificuldade percebida pelos alunos.
+
+### 24.1 Ementas e informacoes curriculares
+
+As ementas sao essenciais porque sao o texto que descreve o conteudo de cada disciplina.
+
+No sistema, as ementas permitem que o modelo semantico entenda, por exemplo, que:
+
+- uma disciplina de aprendizado de maquina se relaciona com inteligencia artificial;
+- uma disciplina de otimizacao pode se relacionar com pesquisa operacional;
+- uma disciplina de estatistica pode se relacionar com analise de dados.
+
+Essas informacoes foram consolidadas no arquivo:
+
+```text
+data/disciplinas_engsis.json
+```
+
+### 24.2 Horarios
+
+Os horarios foram incorporados para evitar recomendacoes impossiveis.
+
+Sem horario, o sistema poderia sugerir duas disciplinas boas, mas no mesmo turno.
+
+Por isso, cada disciplina pode ter uma lista de horarios. Depois, o sistema compara os slots usando:
+
+```text
+dia + turno
+```
+
+### 24.3 Prerequisitos
+
+Os prerequisitos foram transformados em listas de codigos.
+
+Exemplo conceitual:
+
+```json
+"pre_requisitos": ["DCC203", "MAT038"]
+```
+
+Isso facilita a verificacao automatica:
+
+- se todos os codigos estao na lista de concluidas, a disciplina passa;
+- se algum codigo falta, a disciplina e removida.
+
+### 24.4 Dificuldade
+
+A dificuldade e usada para evitar uma grade pesada demais.
+
+O aluno pode controlar um "orcamento de dificuldade" na interface.
+
+Exemplo:
+
+- orcamento = 22;
+- cada disciplina tem uma dificuldade;
+- o sistema soma as dificuldades selecionadas;
+- se passar do limite, a disciplina nao entra.
+
+Essa ideia aproxima o recomendador de uma decisao real de matricula, porque alunos nao escolhem apenas por interesse; eles tambem consideram carga, tempo e risco.
+
+## 25. Como foi feito o cruzamento das informacoes
+
+O cruzamento dos dados acontece em varias camadas.
+
+### 25.1 Cruzamento entre perfil do aluno e disciplinas
+
+O primeiro cruzamento e semantico.
+
+Entrada:
+
+- texto do perfil do aluno;
+- texto de cada disciplina.
+
+Processo:
+
+- ambos viram embeddings;
+- o sistema calcula similaridade;
+- as disciplinas mais proximas entram no ranking.
+
+Esse cruzamento responde:
+
+```text
+"Quais disciplinas parecem combinar com o interesse e historico do aluno?"
+```
+
+### 25.2 Cruzamento entre concluidas e prerequisitos
+
+Depois, o sistema cruza:
+
+- lista de disciplinas concluidas pelo aluno;
+- lista de prerequisitos da disciplina candidata.
+
+Esse cruzamento responde:
+
+```text
+"O aluno pode cursar essa disciplina agora?"
+```
+
+### 25.3 Cruzamento entre candidatas e horarios
+
+O sistema tambem cruza:
+
+- horarios das disciplinas ja selecionadas;
+- horarios da nova candidata.
+
+Esse cruzamento responde:
+
+```text
+"Essa disciplina cabe na grade sem conflito?"
+```
+
+### 25.4 Cruzamento entre score e dificuldade
+
+O sistema precisa equilibrar interesse e carga.
+
+Por isso, ele cruza:
+
+- score semantico;
+- dificuldade individual;
+- dificuldade acumulada.
+
+Esse cruzamento responde:
+
+```text
+"Vale a pena adicionar essa disciplina sem deixar a grade pesada demais?"
+```
+
+### 25.5 Cruzamento final
+
+A recomendacao final e a intersecao entre:
+
+- disciplinas semanticamente relevantes;
+- disciplinas nao cursadas;
+- disciplinas com prerequisitos satisfeitos;
+- disciplinas sem choque de horario;
+- disciplinas dentro do orcamento de dificuldade.
+
+Isso e o ponto principal da solucao: o sistema nao usa apenas IA, nem apenas regras fixas. Ele cruza os dois mundos.
+
+## 26. Intuito da solucao
+
+O intuito do projeto e simular uma decisao que normalmente o aluno faz manualmente.
+
+Ao escolher disciplinas, um aluno costuma pensar:
+
+- "O que combina com meus interesses?"
+- "O que eu ja posso cursar?"
+- "O que nao vai bater horario?"
+- "Essa grade esta pesada demais?"
+- "Quais materias fazem sentido para minha trajetoria?"
+
+O sistema tenta automatizar esse raciocinio.
+
+O papel do SBERT e responder a parte subjetiva:
+
+```text
+"O que combina com meus interesses?"
+```
+
+O papel das regras academicas e responder a parte objetiva:
+
+```text
+"O que e permitido e viavel?"
+```
+
+Essa separacao deixa o sistema mais explicavel. Se uma disciplina nao aparece, pode ser por:
+
+- baixa similaridade semantica;
+- prerequisito faltando;
+- choque de horario;
+- dificuldade acima do limite;
+- ja ter sido cursada.
+
+## 27. O que se esperava do sistema
+
+O comportamento esperado do sistema e:
+
+1. Recomendar disciplinas coerentes com o interesse textual.
+   - Se o aluno fala de IA, dados e aprendizado de maquina, espera-se ver disciplinas relacionadas a computacao, modelos, estatistica ou analise.
+
+2. Nao recomendar disciplinas ja concluidas.
+   - O sistema deve respeitar o historico informado.
+
+3. Nao recomendar disciplinas bloqueadas por prerequisitos.
+   - Isso torna a sugestao academicamente realista.
+
+4. Evitar choques de horario.
+   - A recomendacao deve se aproximar de uma grade possivel.
+
+5. Controlar dificuldade.
+   - O aluno pode ajustar se quer uma grade mais leve ou mais pesada.
+
+6. Mostrar transparencia.
+   - O ranking semantico mostra o que o modelo achou parecido.
+   - A recomendacao final mostra o que passou pelos filtros.
+   - A aba de horarios mostra a composicao da grade.
+
+7. Ser facil de demonstrar.
+   - A interface Streamlit permite testar entradas diferentes ao vivo.
+
+## 28. Possiveis resultados e interpretacao
+
+Durante a demonstracao, e possivel observar dois tipos de resultado:
+
+### 28.1 Ranking semantico
+
+Esse ranking mostra as disciplinas mais parecidas com o perfil antes dos filtros.
+
+Ele e util para mostrar o comportamento da IA.
+
+Uma disciplina pode aparecer bem no ranking, mas nao entrar na recomendacao final.
+
+Motivos possiveis:
+
+- prerequisito nao cumprido;
+- conflito de horario;
+- dificuldade alta;
+- limite maximo de disciplinas atingido.
+
+### 28.2 Recomendacao final
+
+A recomendacao final e mais restrita.
+
+Ela mostra as disciplinas que passaram por todas as condicoes.
+
+Esse e o resultado que se aproxima de uma proposta real de matricula.
+
+## 29. Melhorias futuras detalhadas
+
+### 29.1 Salvar embeddings em disco
+
+Hoje, o app pode gerar embeddings das disciplinas ao carregar.
+
+Melhoria:
+
+- calcular uma vez;
+- salvar em arquivo `.npy`;
+- carregar diretamente nas proximas execucoes.
+
+Beneficio:
+
+- inicializacao mais rapida;
+- menos consumo de CPU;
+- melhor experiencia na apresentacao.
+
+### 29.2 Criar seletor visual de disciplinas concluidas
+
+Hoje o usuario digita codigos como texto.
+
+Melhoria:
+
+- usar multiselect no Streamlit;
+- mostrar codigo e nome da disciplina;
+- evitar erro de digitacao.
+
+Beneficio:
+
+- interface mais amigavel;
+- menos codigos invalidos;
+- melhor experiencia para usuarios sem familiaridade com os codigos.
+
+### 29.3 Explicar por que cada disciplina foi recomendada
+
+Hoje o sistema mostra score, dificuldade e horarios.
+
+Melhoria:
+
+- adicionar uma coluna "justificativa";
+- explicar quais palavras/interesses se relacionam com a disciplina;
+- mostrar se ela entrou por alta similaridade, baixa dificuldade ou encaixe de horario.
+
+Beneficio:
+
+- mais transparencia;
+- recomendacao mais confiavel;
+- melhor defesa academica do sistema.
+
+### 29.4 Mostrar disciplinas removidas e motivo
+
+Hoje a interface mostra a recomendacao final, mas nao detalha todas as exclusoes.
+
+Melhoria:
+
+- criar aba "Descartadas";
+- mostrar motivo:
+  - prerequisito pendente;
+  - conflito de horario;
+  - dificuldade excedida;
+  - ja cursada.
+
+Beneficio:
+
+- sistema mais explicavel;
+- facilita debug;
+- ajuda o aluno a entender caminhos futuros.
+
+### 29.5 Atualizar dados automaticamente
+
+Hoje a base e curada em arquivos locais.
+
+Melhoria:
+
+- buscar dados atualizados de fontes oficiais;
+- atualizar horarios por semestre;
+- atualizar ementas quando mudarem.
+
+Beneficio:
+
+- recomendacoes mais atuais;
+- menos manutencao manual;
+- maior aplicabilidade real.
+
+### 29.6 Usar feedback dos usuarios
+
+O sistema poderia registrar se o aluno aceitou ou rejeitou recomendacoes.
+
+Melhoria:
+
+- botao de feedback;
+- historico de escolhas;
+- ajuste do ranking com base em preferencia real.
+
+Beneficio:
+
+- recomendador aprende com uso;
+- melhora personalizacao;
+- permite avaliacao empirica.
+
+### 29.7 Comparar modelos de embeddings
+
+O projeto usa um modelo baseado em BERT em portugues.
+
+Melhoria:
+
+- testar outros modelos Sentence-BERT;
+- comparar modelos multilingues;
+- comparar modelos treinados especificamente em textos academicos.
+
+Beneficio:
+
+- verificar se o modelo atual e o melhor;
+- melhorar qualidade semantica;
+- gerar resultados quantitativos para o artigo.
+
+### 29.8 Melhorar o algoritmo de selecao final
+
+Hoje o sistema usa uma abordagem gulosa.
+
+Melhoria:
+
+- formular como problema de otimizacao;
+- maximizar score total;
+- respeitar restricoes de dificuldade, horario e quantidade;
+- usar programacao inteira ou busca combinatoria.
+
+Beneficio:
+
+- encontrar combinacoes globalmente melhores;
+- evitar que uma escolha local boa bloqueie uma combinacao final melhor.
+
+### 29.9 Personalizar dificuldade por perfil
+
+A dificuldade atual e geral.
+
+Melhoria:
+
+- considerar desempenho do aluno por area;
+- ajustar dificuldade percebida conforme historico;
+- diferenciar aluno forte em matematica, programacao, gestao etc.
+
+Beneficio:
+
+- recomendacao mais individualizada;
+- grade mais realista para cada aluno.
+
+### 29.10 Integrar calendario e disponibilidade do aluno
+
+Hoje o sistema considera horarios das disciplinas, mas nao necessariamente a rotina externa do aluno.
+
+Melhoria:
+
+- permitir informar horarios indisponiveis;
+- considerar trabalho, estagio ou transporte;
+- bloquear periodos especificos.
+
+Beneficio:
+
+- grade mais aplicavel ao cotidiano;
+- recomendacao mais util na pratica.
+
+### 29.11 Criar modo planejamento de curso
+
+Hoje o sistema recomenda o proximo conjunto de disciplinas.
+
+Melhoria:
+
+- planejar varios semestres;
+- mostrar caminhos ate a formatura;
+- indicar prerequisitos importantes para desbloquear trilhas.
+
+Beneficio:
+
+- ajuda no planejamento de longo prazo;
+- mostra consequencias de escolhas atuais;
+- permite comparar trilhas.
+
+### 29.12 Melhorar avaliacao experimental
+
+Melhoria:
+
+- criar conjunto de teste com escolhas reais de alunos;
+- comparar recomendacoes do sistema com grades historicas;
+- medir satisfacao dos usuarios;
+- calcular Precision@k, Recall@k e MRR em cenarios reais.
+
+Beneficio:
+
+- validacao mais forte;
+- resultados mais defensaveis;
+- base melhor para artigo ou apresentacao.
+
+## 30. Conclusao metodologica
+
+A metodologia do projeto parte de uma ideia simples: recomendar disciplinas nao e apenas um problema de texto, nem apenas um problema de regra curricular. E um problema hibrido.
+
+Por isso, a solucao usa:
+
+- NLP para entender interesses;
+- embeddings para comparar significado;
+- filtros para respeitar restricoes academicas;
+- dificuldade para equilibrar carga;
+- interface interativa para facilitar uso e demonstracao.
+
+Esse desenho torna o sistema flexivel, explicavel e evolutivo. Ele ja funciona como demonstracao interativa e tambem deixa caminho aberto para melhorias com dados reais, otimizacao e aprendizado por feedback.

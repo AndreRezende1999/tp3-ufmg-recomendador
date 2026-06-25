@@ -13,3 +13,4 @@ data/processed/
 data/synthetic_pairs/
 models/
 outputs/
+notebooks/data/

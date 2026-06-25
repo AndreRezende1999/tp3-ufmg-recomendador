@@ -25,6 +25,7 @@ dependencies = [
   "transformers>=4.43",
   "sentence-transformers>=3.0",
   "gradio>=4.0",
+  "streamlit>=1.36",
 ]
 
 [tool.setuptools]

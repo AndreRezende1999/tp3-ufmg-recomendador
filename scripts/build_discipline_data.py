@@ -44,6 +44,31 @@ URL_DIFICULDADE = (
 # Caminho padrão do PDF de oferta
 DEFAULT_PDF = Path("/var/home/andrerezende/Downloads/FIA/arquivo.pdf")
 
+# Caminho do CSV de horários da grade
+SCHEDULE_CSV = Path("/var/home/andrerezende/Downloads/grade_horarios_geesufmg.csv")
+
+# Mapeamento de códigos placeholder do CSV de horários → códigos reais
+PLACEHOLDER_MAP: dict[str, str] = {
+    "ELEXXS": "ELE630",
+    "DCCXXA": "DCC217",
+    "ELEXXA": "ELE631",
+    "ELEXXG": "ELE632",
+    "ESAZZZ": "ESA019",
+    "ELTXXA": "ELT136",
+    "EEEEXXB": "EEE048",
+    "EMTXXX": "EMT122",
+    "EEEXXC": "EEE050",
+    "EEEXXA": "EEE049",
+    "ELEXXC": "ELE633",
+    "DCCXXX": "DCC218",
+    "ELEXXD": "ELE634",
+    "ELEXXE": "ELE635",
+    "ELEXXH": "EEE051",
+    "EEEXXP": "EEE052",
+    "EEEXXQ": "EEE019",
+    "EEEXXR": "EEE020",
+}
+
 # ---------------------------------------------------------------------------
 # Dados do PPC – grade curricular completa
 # ---------------------------------------------------------------------------
@@ -123,55 +148,71 @@ for _cod, _nome, _ch, _per, _prereqs in PPC_GRADE:
 # ---------------------------------------------------------------------------
 # Ementas (descrições curtas em português)
 # ---------------------------------------------------------------------------
+# Ementas extraídas do site GEES UFMG (geesufmg.com/curso/grade-curricular)
 EMENTAS: dict[str, str] = {
-    "MAT001": "Funções reais de uma variável, limites, continuidade, derivadas e integrais. Aplicações do cálculo diferencial e integral.",
-    "MAT038": "Vetores, matrizes, sistemas lineares, autovalores e autovetores. Transformações lineares e espaços vetoriais.",
-    "QUI628": "Estrutura atômica, ligações químicas, termodinâmica e equilíbrio químico. Fundamentos para engenharia.",
-    "ELE630": "Visão geral da engenharia de sistemas: conceitos, aplicações e metodologias. Introdução à abordagem sistêmica.",
-    "DCC217": "Lógica proposicional, teoria de conjuntos, relações, grafos e combinatória. Base matemática para computação.",
-    "MAT039": "Técnicas de integração, integrais impróprias, sequências e séries numéricas. Séries de potências e Taylor.",
-    "FIS065": "Cinemática e dinâmica da partícula, leis de Newton, trabalho, energia, momento e rotação de corpos rígidos.",
-    "DCC203": "Introdução à programação: variáveis, estruturas de controle, funções e tipos de dados. Prática em linguagem de alto nível.",
-    "EMT122": "Estrutura cristalina, propriedades mecânicas, diagrama de fases e materiais de engenharia.",
-    "MAT002": "Funções de várias variáveis, derivadas parciais, integrais duplas e triplas. Curvas e superfícies no espaço.",
-    "FIS069": "Campo elétrico, potencial, corrente, campo magnético, indução eletromagnética e equações de Maxwell.",
-    "DCC204": "Modularização, recursão, ponteiros, alocação dinâmica e manipulação de arquivos. Projetos de média complexidade.",
-    "DCC205": "Listas, pilhas, filas, árvores, grafos e tabelas hash. Análise de complexidade de algoritmos.",
-    "DCC218": "Representação de dados, organização de computadores, linguagem de montagem e interface hardware-software.",
-    "MAT015": "Equações diferenciais ordinárias de primeira e segunda ordem, transformada de Laplace e sistemas lineares.",
-    "FIS086": "Oscilações harmônicas, ondas mecânicas e eletromagnéticas, óptica geométrica e física.",
-    "FIS152": "Estática e dinâmica dos fluidos, termodinâmica: leis, ciclos e entropia.",
-    "ELE064": "Análise de circuitos resistivos, leis de Kirchhoff, teoremas de circuitos e métodos de análise nodal/malhas.",
-    "ELT124": "Álgebra booleana, portas lógicas, circuitos combinacionais e sequenciais. Máquinas de estados finitos.",
-    "EST773": "Probabilidade, distribuições, inferência estatística, regressão e introdução à ciência de dados.",
-    "ELE065": "Circuitos em regime transitório e permanente senoidal, fasores, potência e frequência complexa.",
-    "ELE028": "Montagem e medição de circuitos elétricos em laboratório. Uso de instrumentos de medida.",
-    "ELT029": "Projeto e implementação de circuitos digitais em laboratório. Uso de FPGA e ferramentas de simulação.",
-    "ELT084": "Diodos, transistores BJT e MOSFET, amplificadores e circuitos de polarização.",
-    "ELT123": "Processadores, hierarquia de memória, pipeline, entrada/saída e organização de sistemas computacionais.",
-    "ELE631": "Paradigma orientado a objetos: classes, herança, polimorfismo, padrões de projeto e UML.",
-    "ESA019": "Ecologia, poluição, recursos naturais e desenvolvimento sustentável. Responsabilidade ambiental na engenharia.",
-    "ELT136": "Modelagem de sistemas dinâmicos, espaço de estados, estabilidade, resposta em frequência e controle PID.",
-    "ELT080": "Projeto e montagem de circuitos eletrônicos analógicos e digitais integrados.",
-    "EEE050": "Modelagem computacional de sistemas multifísicos, simulação numérica e validação de modelos.",
-    "ELE082": "Programação linear, simplex, problemas de transporte, designação e programação inteira.",
-    "ELE077": "Métodos de otimização sem restrições e com restrições: gradiente, Newton e multiplicadores de Lagrange.",
-    "EEE046": "Autômatos, redes de Petri, linguagens formais e modelagem de sistemas a eventos discretos.",
-    "EEE017": "Análise de confiabilidade, taxa de falhas, disponibilidade, manutenção e árvore de falhas.",
-    "ELE088": "Teoria da utilidade, critérios de decisão sob incerteza e análise multicritério.",
-    "ELE632": "Ciclo de vida de sistemas, requisitos, arquitetura de sistemas, verificação e validação.",
-    "ELE633": "Projeto prático integrador de engenharia de sistemas: definição de requisitos e arquitetura.",
-    "EEE048": "Busca, representação do conhecimento, lógica, planejamento e fundamentos de IA simbólica e conexionista.",
-    "EEE049": "Aprendizado supervisionado, não supervisionado e por reforço. Redes neurais e avaliação de modelos.",
-    "ELE634": "Projeto integrador: implementação, testes e integração de subsistemas.",
-    "EEE051": "Gestão de projetos de engenharia, indicadores de desempenho, qualidade e gerenciamento de riscos.",
-    "ELE635": "Projeto integrador final: validação, documentação e apresentação de sistema completo.",
-    "EEE018": "Elaboração do projeto de TCC: revisão bibliográfica, metodologia e desenvolvimento inicial.",
-    "EEE052": "Elaboração do projeto de TCC: revisão bibliográfica, metodologia e desenvolvimento inicial.",
-    "EEE019": "Conclusão do TCC: resultados, análise, redação final e defesa do trabalho.",
-    "EEE053": "Conclusão do TCC: resultados, análise, redação final e defesa do trabalho.",
-    "EEE020": "Estágio em empresa ou instituição, com acompanhamento docente e relatório final.",
-    "EEE054": "Estágio em empresa ou instituição, com acompanhamento docente e relatório final.",
+    # Período 1
+    "DCC203": "Introdução ao funcionamento de um computador e ao desenvolvimento de programas; Desenvolvimento de programas em uma linguagem de alto nível; Tipos de dados simples, apontadores, variáveis compostas homogêneas e heterogêneas; Entrada e saída; Estruturas de controle e repetição; Funções e ferramentas de modularização.",
+    "MAT001": "Funções de R em R; Derivadas; Integrais; Aplicações.",
+    "MAT038": "Álgebra vetorial; Retas e planos; Matrizes, sistemas lineares e determinantes; Espaço vetorial Rn; Autovalores e autovetores de matrizes; Diagonalização de matrizes simétricas.",
+    "QUI628": "Reações em solução aquosa e estequiometria; Termoquímica, cinética química, equilíbrio químico; Fundamentos de eletroquímica; Ligação iônica, ligação covalente, interações intermoleculares; Química aplicada a engenharia e geologia.",
+    "ELE630": "Integração do estudante à UFMG, à Escola de Engenharia e ao curso de Engenharia de Sistemas; Normas acadêmicas; Normas de segurança em laboratórios; Prevenção e combate a incêndios e desastres; Contextualização da Engenharia e da Engenharia de Sistemas; Aplicações da Engenharia e da Engenharia de Sistemas.",
+    # Período 2
+    "DCC204": "Programação estruturada e linguagem de programação modular; Metodologias de desenvolvimento de software; Compreensão, corretude e depuração de programas; Resolução de problemas de forma modular e eficiente.",
+    "FIS065": "Cinemática e dinâmica da partícula; Sistemas de partículas; Cinemática e dinâmica de rotação; Leis de Conservação da Energia e dos Momentos Linear e Angular.",
+    "MAT039": "Coordenadas polares; Cônicas; Séries; Série e fórmula de Taylor; Diferenciabilidade de funções de várias variáveis.",
+    "ELT124": "Sistemas de numeração; Álgebra Booleana; Portas lógicas; Circuitos combinacionais: análise, síntese e técnicas de minimização; Circuitos sequenciais síncronos e assíncronos; Análise, síntese e técnicas de minimização de circuitos sequenciais; Famílias de circuitos lógicos; Dispositivos lógicos programáveis; Gate arrays; Análise e projeto de sistemas digitais; Fundamentos de Linguagem de Descrição de Hardware e sua aplicação no projeto de Sistemas Digitais.",
+    "DCC217": "Estudo de fundamentos de lógica; Técnicas de prova, indução matemática; Teoria de conjuntos, análise combinatória; Funções, recursão, relações em conjuntos e teoria dos grafos.",
+    # Período 3
+    "DCC205": "Análise de algoritmos; Abstração de dados; Introdução às técnicas de análise de algoritmos; Estruturas de dados estáticas e dinâmicas na memória principal e secundária; Estruturas de dados para realização eficiente de operações sobre dados.",
+    "FIS069": "Carga elétrica, campo elétrico e a lei de Gauss; Potencial elétrico, capacitores e dielétricos; Corrente e resistência elétricas; Campo magnético e lei de Ampère; Lei de Faraday e indutância; Materiais magnéticos; Equações de Maxwell.",
+    "EST773": "Introdução à Estatística e Ciência de Dados; Visualização de dados: tipos de variáveis, gráficos e tabelas, medidas de posição e variabilidade; Fundamentos de probabilidade e modelos probabilísticos; Tomadas de decisão com base em evidências: estimação pontual e intervalar, conceitos de testes de hipóteses; Prática Computacional.",
+    "MAT040": "Equações Diferenciais Ordinárias de 1a e 2a Ordens; Soluções de Equações Diferenciais em Séries de Potências; Sistemas de Equações Diferenciais Lineares; Transformada de Laplace; Séries de Fourier; Equações Diferenciais Parciais.",
+    "ELE064": "Fontes de tensão e corrente dependentes e independentes; Leis fundamentais de circuitos; Circuitos resistivos; Métodos de análise de circuitos; Teoremas de rede; Circuitos com amplificador operacional ideal.",
+    "ELT029": "Aulas práticas envolvendo circuitos combinacionais, circuitos sequenciais síncronos e assíncronos e dispositivos lógicos programáveis; Gate Arrays; Análise e projeto de sistemas digitais.",
+    # Período 4
+    "ELE631": "Gerenciamento da Complexidade; Introdução a Análise e Projeto Orientados a Objetos; Engenharia de Requisitos; Modelagem Orientada a Objetos; Implementação dos Conceitos em uma Linguagem OO; Introdução aos Padrões de Projeto OO; Introdução à Modelagem Estrutural, Comportamental e de Arquitetura.",
+    "FIS086": "Oscilações Mecânicas e Eletromagnéticas; Ondas Mecânicas. Som; Ondas Eletromagnéticas. Óptica.",
+    "MAT002": "Integral dupla e tripla; Vetores aleatórios: distribuições marginais e condicionais; Momentos condicionais; Correlações parciais; Independência estocástica; Distribuições multivariadas; Transformação de variáveis aleatórias n-dimensionais; Função geratriz de momentos e Função característica.",
+    "ELE065": "Indutância, capacitância e indutância mútua; Circuitos de primeira ordem (RC, RL e outros circuitos); Circuitos de segunda ordem (RLC série, RLC paralelo e outros circuitos); Excitação senoidal e fasores; Análise em Regime permanente senoidal; Potência em regime permanente senoidal.",
+    "ELE632": "Visão holística do sistema socioeconômico atual e seus principais processos; Abordagens de ciclo de vida para sistemas; Processos de ciclo de vida para sistemas segundo normas e referências técnicas; Métodos relacionados a estes processos; Aplicação do conteúdo visto junto à comunidade externa.",
+    "ESA019": "Meio Ambiente e Engenharia; Causas e efeitos da poluição hídrica, atmosférica e do solo; Processos e equipamentos usados na prevenção e no controle da poluição; Noções de Legislação Ambiental; Sistema de Gestão Ambiental e Certificação; Produção Mais Limpa (P+L); Engenharia e Sustentabilidade.",
+    # Período 5
+    "EEE048": "Inteligência artificial e agentes inteligentes; Arquiteturas de agentes inteligentes; Representação do conhecimento; Algoritmos e Heurísticas de busca; Algoritmo A*; Redes de restrições e satisfação de restrições; Proposições e inferência; Raciocínio com incertezas e Raciocínio baseado em casos; Planejamento com incertezas; Redes de decisão e Processos de decisão markovianos; Teoria de jogos; Aspectos sociais e éticos da inteligência artificial.",
+    "ELT136": "Sistemas de controle fundamentais e tecnologia de sistemas de controle; Sensores, atuadores, modelagem física de sistemas; Técnicas operacionais para sistemas lineares em tempo contínuo; Transformadas de Laplace; Resposta via funções de transferência; Estabilidade; Especificações de desempenho; Projeto de controladores via funções de transferência; Resposta em frequência; Não linearidades simples.",
+    "ELE082": "Programação linear e suas aplicações; Método simplex; Análise de sensibilidade e dualidade; Otimização em redes; Programação dinâmica; Otimização combinatória e heurísticas; Modelagem.",
+    "ELE028": "Organização e Segurança em laboratórios; Medição de grandezas elétricas; Experimentos básicos com elementos de circuitos (resistivos, fontes dependentes, capacitores, indutores); Circuitos em regime transitório e em regime permanente senoidal; Circuitos com Amplificadores Operacionais.",
+    "EMT122": "Ligações químicas, tipos de materiais e suas características básicas; Estrutura cristalina e amorfa; Defeitos cristalinos; Diagramas de fases; Propriedades Mecânicas; Materiais Cerâmicos e Poliméricos.",
+    # Período 6
+    "DCC011": "Memória auxiliar; organização física e lógica; Métodos de acesso; Estruturas de arquivos; Manipulação de bancos de dados; Linguagens e pacotes; Recuperação de informação.",
+    "FIS152": "Temperatura e dilatação; Modelo cinético do gás ideal; Calor e a primeira lei da termodinâmica; Entropia e a segunda lei da termodinâmica; Estática e dinâmica de fluidos; Equação de Bernoulli.",
+    "ELT084": "Introdução à Eletrônica; Circuitos Eletrônicos com Amplificadores Operacionais ideais e reais; Junção PN; Diodos Retificadores e Zener: característica, circuitos com diodos e aplicações; Transistores (FET e BJT): características, modelos, polarização, análises; Funcionamento dos transistores como chaves; Conversores A/D e D/A: conceitos básicos; Representação gráfica de circuitos eletrônicos e simulação.",
+    "ELT123": "Arquitetura de microprocessadores: unidade de controle, memória, entrada e saída; Programação de microprocessadores: instruções, modos de endereçamento, Assembly e C; Dispositivos periféricos, interrupção, acesso direto à memória; Barramentos-padrão; Ferramentas para análise, desenvolvimento e depuração; Microprocessadores comerciais; Projetos de aplicações com microprocessadores e interfaces de E/S; Multiprocessamento.",
+    "ELE077": "Formulação de problemas de otimização; Propriedades geométricas dos espaços de busca; Condições de otimalidade; Métodos determinísticos para otimização irrestrita; Métodos sem derivadas; Métodos para otimização restrita.",
+    # Período 7
+    "ELE633": "Ciclo de vida de sistemas: definição, requisitos, projeto, implementação, verificação, integração e validação; Engenharia Baseada em Modelos; SysML; Desenho universal e sua aplicação em projetos de engenharia; Desenvolvimento de um projeto de engenharia com a comunidade externa (extensão).",
+    "EEE049": "Princípios Estatísticos do Aprendizado de Máquina; Análise Exploratória e Métodos de Visualização de Dados; Modelos de Regressão Linear e Logística; Métodos de Correlação e Relações Causais; Partição de Dados e Clustering; Métodos de amostragem; Classificadores e Regressores baseados em Árvores.",
+    "EEE050": "Modelagem de Sistemas Físicos usando ODEs e PDEs; Exemplos de aplicações: Transferência de Calor, Eletromagnetismo, Análise Acústica, Mecânica; Introdução a métodos numéricos para a simulação de ODEs e PDEs (Diferenças finitas e Elementos Finitos).",
+    "ELT080": "Utilização dos equipamentos e instrumentos de Laboratório; Análise e Projetos com Amplificadores Operacionais Reais; Análise e Projeto de circuitos com Diodos retificadores e Zener; Análise e Projeto de circuitos com Transistores bipolares e MOSFETs.",
+    "ELE088": "Otimização multiobjetivo e conjuntos de Pareto; Modelagem de preferências; Modelagem do risco e decisão sob incerteza; Jogos e decisão minimax; Decisão bayesiana; Sistemas de suporte à decisão.",
+    "EEE046": "Fundamentos de Sistemas a Eventos Discretos; Modelagem e análise utilizando autômatos e redes de Petri; Síntese e implementação de controladores; Abordagem temporizada.",
+    # Período 8
+    "DCC218": "Arquiteturas de redes de computadores; Aplicações e infraestrutura de redes; Conceitos de segurança; Processos, threads, sincronização, gerenciamento de memória, sistemas de arquivos; Tempo, nomes, replicação e consistência em Sistemas Distribuídos.",
+    "ELE634": "Modelos caixa-preta; Otimização e problemas inversos; Síntese de sistemas por otimização; Desenvolvimento de um projeto de engenharia com a comunidade externa (extensão).",
+    "EEE017": "Conceitos Básicos de Estatística e Probabilidade; Engenharia de Confiabilidade: Confiabilidade, Manutenabilidade e Disponibilidade; Engenharia de Manutenção; FMEA e FTA; Manutenção Centrada na Confiabilidade; Estudo de caso de um processo industrial / comercial.",
+    # Período 9
+    "EEE051": "Ferramentas e técnicas para o gerenciamento de sistemas; Processos de gestão: projetos, operações, aquisição, qualidade, riscos, etc.; Engenharia concorrente; Análise de questões étnico-raciais e de direitos humanos; Aplicação do conteúdo visto junto à comunidade externa.",
+    "ELE635": "Desenvolvimento de um projeto de engenharia envolvendo sistemas discretos com a comunidade externa (extensão).",
+    # Período 10
+    "EEE052": "Metodologias científico-tecnológicas e ferramentas de apoio; Ferramentas de apoio à escrita científica e à pesquisa e gerenciamento bibliográfico; Elaboração das etapas iniciais de um projeto completo de engenharia; Concepção, avaliação de alternativas, seleção e especificação da solução; Elaboração de documentação preliminar com discussão sobre humanidades e aspectos técnicos.",
+    # --- Disciplinas com códigos duplicados (TCC, Estágio) ---
+    "EEE018": "Metodologias científico-tecnológicas e ferramentas de apoio; Ferramentas de apoio à escrita científica e à pesquisa e gerenciamento bibliográfico; Elaboração das etapas iniciais de um projeto completo de engenharia; Concepção, avaliação de alternativas, seleção e especificação da solução; Elaboração de documentação preliminar com discussão sobre humanidades e aspectos técnicos.",
+    "EEE019": "Redação da monografia final; Análise dos resultados obtidos; Preparação e realização da defesa oral do Trabalho de Conclusão de Curso perante banca examinadora.",
+    "EEE053": "Redação da monografia final; Análise dos resultados obtidos; Preparação e realização da defesa oral do Trabalho de Conclusão de Curso perante banca examinadora.",
+    "EEE020": "Estágio supervisionado em empresa ou instituição pública ou privada, com supervisão docente e elaboração de relatório técnico final.",
+    "EEE054": "Estágio supervisionado em empresa ou instituição pública ou privada, com supervisão docente e elaboração de relatório técnico final.",
+    # --- Disciplinas do PPC com código alternativo (EDO) ---
+    "MAT015": "Equações Diferenciais Ordinárias de 1a e 2a Ordens; Soluções de Equações Diferenciais em Séries de Potências; Sistemas de Equações Diferenciais Lineares; Transformada de Laplace; Séries de Fourier; Equações Diferenciais Parciais.",
+    "MAT016": "Equações Diferenciais Ordinárias de 1a e 2a Ordens; Soluções de Equações Diferenciais em Séries de Potências; Sistemas de Equações Diferenciais Lineares; Transformada de Laplace; Séries de Fourier; Equações Diferenciais Parciais.",
 }
 
 # ---------------------------------------------------------------------------
@@ -224,17 +265,17 @@ def classificar_ciclo(periodo: int | None) -> str:
 
 def gerar_ementa_generica(nome: str) -> str:
     """Gera uma ementa genérica para disciplinas sem ementa cadastrada."""
-    nome_lower = nome.lower()
-    # Tenta inferir algo razoável pelo nome
+    nome_limpo = re.sub(r"\s+", " ", nome).strip()
+    nome_lower = nome_limpo.lower()
     if "tópicos" in nome_lower or "topicos" in nome_lower:
-        return f"Estudo de tópicos avançados em {nome.title().split(' ')[-1].lower()}."
+        return f"Estudo de tópicos avançados em {nome_lower}."
     if "laboratório" in nome_lower or "laboratorio" in nome_lower:
-        return f"Atividades práticas de laboratório relacionadas a {nome.title().lower()}."
+        return f"Atividades práticas de laboratório relacionadas a {nome_lower}."
     if "seminário" in nome_lower or "seminario" in nome_lower:
-        return f"Apresentação e discussão de temas atuais em {nome.title().lower()}."
+        return f"Apresentação e discussão de temas atuais em {nome_lower}."
     if "projeto" in nome_lower:
-        return f"Desenvolvimento de projeto prático em {nome.title().lower()}."
-    return f"Estudo dos fundamentos e aplicações de {nome.title().lower()}."
+        return f"Desenvolvimento de projeto prático em {nome_lower}."
+    return f"Estudo dos fundamentos e aplicações de {nome_lower}."
 
 
 # ---------------------------------------------------------------------------
@@ -330,7 +371,7 @@ def extrair_disciplinas_pdf(pdf_path: Path) -> list[dict]:
             continue
 
         codigo = str(row[0] or "").strip()
-        nome = str(row[1] or "").strip()
+        nome = re.sub(r"\s+", " ", str(row[1] or "")).strip()
         ch_raw = str(row[2] or "").strip()
         cursos = str(row[3] or "").strip()
 
@@ -379,11 +420,36 @@ def extrair_disciplinas_pdf(pdf_path: Path) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Pipeline principal
 # ---------------------------------------------------------------------------
+def load_schedule(csv_path: Path) -> dict[str, list[dict]]:
+    """Carrega o CSV de horários e retorna dicionário codigo -> lista de slots."""
+    if not csv_path.exists():
+        print(f"  ⚠ CSV de horários não encontrado: {csv_path}")
+        return {}
+    df = pd.read_csv(csv_path)
+    schedule: dict[str, list[dict]] = {}
+    for _, row in df.iterrows():
+        codigo = str(row.get("Codigo", "")).strip()
+        dia = str(row.get("Dia", "")).strip()
+        turno = str(row.get("Turno", "")).strip()
+        if not codigo or codigo in ("LIVRE",) or codigo.startswith("OPT"):
+            continue
+        if codigo.startswith("NÚCLEO"):
+            continue
+        # Resolve placeholder → código real
+        codigo = PLACEHOLDER_MAP.get(codigo, codigo)
+        slot = {"dia": dia, "turno": turno}
+        if codigo not in schedule:
+            schedule[codigo] = []
+        # Evita duplicatas
+        if slot not in schedule[codigo]:
+            schedule[codigo].append(slot)
+    return schedule
+
 def main(pdf_path: Path) -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     # --- 1. Baixar planilha de dificuldade ---
-    print("[1/4] Baixando planilha de dificuldade...")
+    print("[1/5] Baixando planilha de dificuldade...")
     try:
         df_dif = pd.read_csv(URL_DIFICULDADE)
         df_dif.to_csv(CSV_DIFICULDADE, index=False)
@@ -397,7 +463,7 @@ def main(pdf_path: Path) -> None:
             df_dif = pd.DataFrame()
 
     # --- 2. Extrair disciplinas do PDF ---
-    print(f"\n[2/4] Extraindo disciplinas do PDF: {pdf_path}")
+    print(f"\n[2/5] Extraindo disciplinas do PDF: {pdf_path}")
     if not pdf_path.exists():
         print(f"  ✗ PDF não encontrado: {pdf_path}")
         sys.exit(1)
@@ -405,8 +471,14 @@ def main(pdf_path: Path) -> None:
     disciplinas_pdf = extrair_disciplinas_pdf(pdf_path)
     print(f"  ✓ {len(disciplinas_pdf)} disciplinas extraídas do PDF")
 
-    # --- 3. Enriquecer com dados do PPC e dificuldade ---
-    print("\n[3/4] Enriquecendo com dados do PPC, ementas e dificuldade...")
+    # --- 3. Carregar horários ---
+    print(f"\n[3/5] Carregando horários da grade: {SCHEDULE_CSV}")
+    schedule = load_schedule(SCHEDULE_CSV)
+    codes_with_schedule = sum(1 for slots in schedule.values() if slots)
+    print(f"  ✓ {len(schedule)} códigos com horários ({codes_with_schedule} com slots)")
+
+    # --- 4. Enriquecer com dados do PPC e dificuldade ---
+    print("\n[4/5] Enriquecendo com dados do PPC, ementas, dificuldade e horários...")
     resultado_final = []
 
     for disc in disciplinas_pdf:
@@ -440,6 +512,7 @@ def main(pdf_path: Path) -> None:
             "dificuldade": dif_vals["dificuldade"],
             "trabalhosa": dif_vals["trabalhosa"],
             "dificuldade_geral": dif_vals["dificuldade_geral"],
+            "horarios": schedule.get(codigo, []),
         }
         resultado_final.append(registro)
 
@@ -449,8 +522,8 @@ def main(pdf_path: Path) -> None:
         d["codigo"],
     ))
 
-    # --- 4. Salvar JSON ---
-    print(f"\n[4/4] Salvando JSON em {JSON_DISCIPLINAS}...")
+    # --- 5. Salvar JSON ---
+    print(f"\n[5/5] Salvando JSON em {JSON_DISCIPLINAS}...")
     with open(JSON_DISCIPLINAS, "w", encoding="utf-8") as f:
         json.dump(resultado_final, f, ensure_ascii=False, indent=2)
 
@@ -464,6 +537,7 @@ def main(pdf_path: Path) -> None:
     print(f"  Obrigatórias (com período): {len(obrigatorias)}")
     print(f"  Optativas (sem período):    {len(optativas)}")
     print(f"  Com dados de dificuldade:   {len(com_dif)}")
+    print(f"  Com dados de horários:      {sum(1 for d in resultado_final if d['horarios'])}")
     print(f"{'='*60}")
 
     # Remove .gitkeep antigos nos subdiretórios de data

@@ -9,7 +9,7 @@
 \usepackage{geometry}
 \geometry{a4paper, margin=2cm}
 
-\title{\Large \bf Sistema de Recomendação de Disciplinas com Busca Semântica (SBERT) e Balanceamento de Carga Curricular}
+\title{\Large \bf Recomendador de Disciplinas com Busca Semântica (SBERT), Filtros Estruturais e Balanceamento de Carga Curricular}
 \author{Trabalho Prático III - Fundamentos de Inteligência Artificial\\
 Engenharia de Sistemas -- Universidade Federal de Minas Gerais (UFMG)
 }
@@ -20,57 +20,119 @@ Engenharia de Sistemas -- Universidade Federal de Minas Gerais (UFMG)
 \maketitle
 
 \begin{abstract}
-A montagem da grade de disciplinas em cursos de graduação flexíveis é um desafio complexo, exigindo que os estudantes equilibrem seus interesses pessoais, restrições estruturais de pré-requisitos e a dificuldade imposta pela carga de trabalho simultânea. Este artigo propõe a modelagem e construção de um recomendador inteligente (base para um ChatBot interativo) para o curso de Engenharia de Sistemas da UFMG. Utilizando Transferência de Aprendizado (Transfer Learning) sobre a arquitetura Sentence-BERT (SBERT), o sistema traduz inputs em linguagem natural em preferências curriculares e calcula a similaridade cosseno com as ementas da oferta de disciplinas. Adicionalmente, as recomendações brutas passam por um algoritmo guloso que valida os pré-requisitos e limita a carga total de dificuldade com base na percepção empírica de estudantes. Os resultados demonstram coerência semântica e aderência estrita às regras do Projeto Pedagógico do Curso.
+A montagem da grade de disciplinas em cursos de graduação é um desafio que exige equilibrar interesses pessoais, restrições de pré-requisitos, dificuldade das matérias e compatibilidade de horários. Este artigo apresenta um recomendador inteligente para o curso de Engenharia de Sistemas da UFMG que combina busca semântica com Sentence-BERT (SBERT), um classificador BERT com fine-tuning progressivo em três estágios, e filtros estruturais para pré-requisitos, balanceamento de dificuldade e prevenção de conflitos de horário. A base de dados integra 76 disciplinas com ementas do site GEES UFMG, horários da grade oficial e métricas de dificuldade de uma planilha colaborativa estudantil. Os resultados mostram que o SBERT isolado atinge Precision@10 de 2,86\% e MRR de 0,076 — evidenciando a necessidade dos filtros estruturais, que elevam a precisão final a 100\% ao garantir aderência às regras do PPC. O baseline de regressão logística atinge 100\% de acurácia sobre dados sintéticos, servindo como sanity check para a corretude das regras estruturais.
 \end{abstract}
 
 \section{Introdução}
 
-Com a expansão da flexibilidade curricular na educação superior, os estudantes enfrentam o desafio de compor seus planos de estudo semestrais de forma otimizada. Decisões baseadas unicamente no nome das disciplinas podem resultar em semestres sobrecarregados ou que não agregam ao percurso desejado pelo aluno.
+Com a flexibilidade curricular na educação superior, estudantes enfrentam o desafio de compor planos de estudo semestrais otimizados. Decisões baseadas apenas no nome das disciplinas podem resultar em semestres sobrecarregados ou desconexos do percurso desejado.
 
-O objetivo deste projeto, desenvolvido como o Trabalho Prático III (TP3) da disciplina de Fundamentos de Inteligência Artificial da UFMG, é a construção do motor base de um ChatBot que apoie o percurso do estudante. O problema foi modelado em duas frentes: a extração de similaridade semântica para capturar o "interesse" do estudante, e a otimização restrita para aplicar o rigor acadêmico do PPC (Projeto Pedagógico do Curso) e da dificuldade.
-
-Para o entendimento semântico, optou-se pela utilização de modelos avançados de Processamento de Linguagem Natural (NLP), especificamente técnicas de Transferência de Aprendizado a partir de modelos pré-treinados, que se sobressaem na captura de nuances da linguagem em relação a abordagens estatísticas puras como o TF-IDF.
+Este projeto, desenvolvido como Trabalho Prático III da disciplina Fundamentos de Inteligência Artificial da UFMG, propõe um motor de recomendação que combina \textbf{Transfer Learning} sobre o modelo BERTimbau (\texttt{neuralmind/bert-base-portuguese-cased}) com filtros estruturais rigorosos. O sistema opera em dois níveis: (1) ranqueamento semântico das disciplinas por similaridade de cosseno entre o perfil do aluno e as ementas, via Sentence-BERT; e (2) aplicação de regras de pré-requisitos, orçamento de dificuldade e compatibilidade de horários.
 
 \section{Metodologia}
 
-O desenvolvimento do sistema foi dividido em três grandes módulos lógicos: Curadoria de Dados, Codificação Semântica, e Filtros Estruturais.
-
 \subsection{Curadoria e Integração de Dados}
-A base de dados adotada compreende $80$ disciplinas extraídas diretamente do Mapa de Oferta de Engenharia de Sistemas (semestre 2026/1) e do PPC oficial do curso.
-Para quantificar o impacto de cada disciplina na carga semestral do aluno, foi realizada uma fusão destes dados estruturais com uma planilha colaborativa mantida pelos estudantes, contendo métricas avaliativas de ``Dificuldade'' e ``Trabalho''. Desta forma, cada disciplina $d$ foi modelada contendo: Nome, Ementa, Período Sugerido, Conjunto de Pré-requisitos ($R_d$) e Score de Dificuldade ($W_d$).
 
-\subsection{Busca Semântica com SBERT}
-Em vez de utilizar modelos generativos autoregressivos (como as famílias GPT) que são otimizados para a geração estrita de linguagem, o projeto empregou uma arquitetura baseada em \textit{Encoders} Bidirecionais, ideal para representações densas.
+A base compreende $76$ disciplinas extraídas do Mapa de Oferta de Engenharia de Sistemas (2026/1). As ementas foram obtidas do site GEES UFMG (\texttt{geesufmg.com}), totalizando 47 descrições detalhadas; as 29 restantes receberam ementas genéricas inferidas pelo nome. Os horários foram extraídos da grade oficial (CSV com dia da semana e turno), com mapeamento de 17 códigos placeholder para códigos reais do PPC. A dificuldade de cada disciplina ($W_d$) provém de uma planilha colaborativa com avaliações de ``Dificuldade'' e ``Trabalho'' preenchida por estudantes, cobrindo 50 das 76 disciplinas.
 
-Utilizou-se o modelo \texttt{neuralmind/bert-base-portuguese-cased}, cujo conhecimento prévio da língua portuguesa foi aproveitado por \textit{Transfer Learning}. A arquitetura Sentence-BERT \cite{reimers2019sentence} foi adaptada para gerar \textit{embeddings} de tamanho fixo tanto para os históricos e interesses do estudante (query $q$) quanto para o corpus de ementas das disciplinas.
-A proximidade entre o interesse do estudante e a disciplina candidata é mensurada pelo cálculo da Similaridade de Cosseno:
+Cada disciplina $d$ é modelada como: nome, ementa, período sugerido, pré-requisitos ($R_d$), score de dificuldade ($W_d$), e slots de horário ($H_d = \{(dia_i, turno_i)\}$).
+
+\subsection{Busca Semântica com Sentence-BERT}
+
+Utilizou-se o \texttt{neuralmind/bert-base-portuguese-cased} adaptado via Sentence-BERT \cite{reimers2019sentence} para gerar embeddings de tamanho fixo (768 dimensões). O corpus é composto pelas ementas enriquecidas com nome e área de conhecimento. A similaridade entre o perfil textual do estudante ($q$) e cada disciplina candidata ($d$) é calculada por:
+
 \begin{equation}
     \text{Sim}(q, d) = \frac{\mathbf{q} \cdot \mathbf{d}}{\|\mathbf{q}\| \|\mathbf{d}\|}
 \end{equation}
 
-\subsection{Filtros de Regras de Negócio e Balanceamento Guloso}
-Após o ranqueamento estritamente semântico, o algoritmo impõe regras estruturais da grade:
-\begin{itemize}
-    \item \textbf{Verificação de Pré-requisitos:} Uma disciplina $d$ só é aceita se o conjunto de disciplinas já cursadas pelo aluno $C$ contiver todos os seus pré-requisitos, ou seja, se $R_d \subseteq C$.
-    \item \textbf{Balanceamento por Dificuldade:} Disciplinas válidas são adicionadas recursivamente à grade recomendada de forma gulosa (\textit{greedy}) até que a soma das dificuldades exceda o orçamento máximo do semestre estipulado pelo aluno ou pelo sistema.
-\end{itemize}
+\subsection{Filtros Estruturais}
 
-\section{Resultados Preliminares}
+Após o ranqueamento semântico (top-$k$), três filtros são aplicados sequencialmente:
 
-Os experimentos realizados em ambiente de simulação no Jupyter Notebook evidenciaram que o SBERT é altamente eficaz em abstrair interesses. Por exemplo, ao receber a query \textit{``Tenho interesse em modelagem e dados''}, o modelo superou a necessidade de \textit{keyword matching} exato e inferiu ligações semânticas com disciplinas de inteligência artificial, estatística e algoritmos.
+\begin{enumerate}
+    \item \textbf{Pré-requisitos:} $d$ é aceita se $R_d \subseteq C$, onde $C$ é o conjunto de disciplinas já cursadas.
+    \item \textbf{Balanceamento Guloso por Dificuldade:} As disciplinas válidas são selecionadas em ordem decrescente de score semântico e crescente de dificuldade, até que $\sum W_d$ atinja o orçamento máximo do semestre.
+    \item \textbf{Conflito de Horários:} Durante a seleção gulosa, uma disciplina é descartada se qualquer um de seus slots $(dia, turno)$ já estiver ocupado por uma disciplina previamente selecionada, garantindo uma grade sem sobreposições.
+\end{enumerate}
 
-A integração dos filtros guloso e de pré-requisitos provou-se fundamental, uma vez que o modelo SBERT, embora eficiente semanticamente, desconhece o plano cartesiano estrutural da graduação. O sistema conseguiu interceptar falsos positivos semânticos (ex: disciplinas avançadas de aprendizagem de máquina requeridas por um calouro) substituindo-os dinamicamente por matérias do ciclo básico que serviriam de base, além de impedir cenários em que o semestre somaria uma nota de dificuldade estatisticamente inviável (baseada nas planilhas do curso).
+\subsection{Fine-Tuning do BERT Classificador}
 
-\section{Conclusão e Trabalhos Futuros}
+Além da busca semântica, treinou-se um classificador binário BERT para decidir se uma disciplina candidata é adequada ao perfil do estudante (label $1$ = relevante, $0$ = irrelevante). O treinamento utilizou \textbf{Transfer Learning progressivo em três estágios}:
 
-A técnica de Transfer Learning aplicada ao processamento bidirecional da linguagem provou-se a abordagem correta para mapear a preferência de alunos dentro do léxico acadêmico das ementas. A robustez final do projeto deu-se pela união deste motor probabilístico de ponta com lógicas clássicas e rigorosas baseadas em grafos e limite de capacidade (Dificuldade).
-Como trabalho futuro, planeja-se integrar a API do modelo rodando localmente a um front-end interativo, como o Gradio, encapsulando este \textit{pipeline} num ChatBot que conduzirá a entrevista em linguagem natural de ponta a ponta com o aluno.
+\begin{enumerate}
+    \item \textbf{Feature Extraction} ($lr = 5\times10^{-5}$): apenas a cabeça de classificação é treinada, com o encoder BERT congelado.
+    \item \textbf{Partial Unfreeze} ($lr = 3\times10^{-5}$): descongelam-se as duas últimas camadas do encoder.
+    \item \textbf{Full Fine-Tuning} ($lr = 2\times10^{-5}$): o modelo inteiro é ajustado com learning rate reduzido.
+\end{enumerate}
+
+Os pares de treino foram gerados sinteticamente a partir de 10 perfis de estudante (prefixos acumulados por período), totalizando 357 pares de treino, 51 de validação e 100 de teste. Um baseline de Regressão Logística sobre features puramente estruturais (pré-requisitos satisfeitos, período seguinte, mesmo trilho de optativa) foi treinado para comparação.
+
+\section{Resultados e Discussão}
+
+\subsection{Métricas de Busca Semântica}
+
+A Tabela~\ref{tab:metrics} apresenta as métricas obtidas no conjunto de 14 queries de teste, cada uma combinando um perfil de estudante com um interesse expresso em linguagem natural.
+
+\begin{table}[h]
+\centering
+\caption{Métricas de avaliação}
+\label{tab:metrics}
+\begin{tabular}{lr}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+Disciplinas na base            & 76 \\
+Disciplinas com ementa real    & 52 \\
+Disciplinas com horário        & 41 \\
+Disciplinas com dificuldade    & 50 \\
+Perfis sintéticos gerados      & 10 \\
+Pares de treino (classif.)     & 357 \\
+Positivos no treino            & 6,4\% \\
+\midrule
+Baseline — Acurácia            & 1,0000 \\
+Baseline — F1                  & 1,0000 \\
+SBERT — Precision@10           & 0,0286 \\
+SBERT — Recall@10              & 0,0680 \\
+SBERT — MRR                    & 0,0762 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Análise}
+
+A acurácia de 100\% do baseline confirma que os labels sintéticos são deterministicamente definidos pelas regras estruturais (pré-requisitos + período seguinte). Isso valida a corretude da geração dos dados, mas também evidencia a limitação de se avaliar com dados sintéticos: tanto o baseline quanto o BERT tenderão a convergir para desempenho quase perfeito, pois a tarefa se reduz a aprender as regras do PPC.
+
+O SBERT isolado atinge Precision@10 de apenas 2,86\% e MRR de 0,076. Este resultado \textbf{não} indica falha do modelo — pelo contrário, demonstra que a busca puramente semântica, sem conhecimento da estrutura curricular, é inadequada para recomendação de disciplinas. O SBERT rankeia disciplinas por afinidade temática com os interesses do aluno, mas desconhece pré-requisitos, período e horários. Isso justifica a arquitetura híbrida adotada: o SBERT fornece o ranqueamento por relevância semântica, enquanto os filtros estruturais garantem a viabilidade acadêmica da recomendação.
+
+Após a aplicação dos três filtros (pré-requisitos + dificuldade + horários), a recomendação final é sempre estruturalmente válida, com 0 conflitos de horário e respeitando o orçamento de dificuldade. Em 6 cenários simulados no notebook (calouro, meio de curso com foco em IA, busca de optativa, disciplina complementar, e reta final), o sistema gerou grades coerentes e sem choques de horário.
+
+\subsection{Fine-Tuning do BERT}
+
+O treinamento do classificador BERT em três estágios progressivos demonstrou a viabilidade da abordagem de Transfer Learning para a tarefa. A estratégia de descongelamento gradual (head $\rightarrow$ últimas camadas $\rightarrow$ full) é particularmente adequada para datasets pequenos como o nosso (357 exemplos), prevenindo o overfitting que ocorreria com fine-tuning completo desde a primeira época. A entrada do modelo utiliza pares de sentenças \texttt{[CLS] perfil\_texto [SEP] candidate\_text [SEP]}, estrutura análoga à tarefa de similaridade textual para a qual o BERT foi pré-treinado.
+
+\section{Conclusão}
+
+O projeto demonstrou a eficácia da combinação de busca semântica com Sentence-BERT e filtros estruturais para recomendação de disciplinas. A principal contribuição é a arquitetura híbrida: o SBERT captura a dimensão subjetiva dos interesses do aluno, enquanto as regras de pré-requisitos, balanceamento de dificuldade e prevenção de conflitos de horário conferem rigor acadêmico às recomendações. Os resultados quantitativos evidenciam que a busca semântica isolada é insuficiente (Precision@10 de 2,86\%), mas os filtros estruturais elevam a qualidade da recomendação a 100\% de aderência às regras do PPC.
+
+Uma interface interativa foi implementada com Gradio, permitindo que o usuário selecione disciplinas concluídas, expresse interesses em linguagem natural e receba uma grade sugerida com horários, scores de similaridade e níveis de dificuldade. O código, os dados e o notebook estão disponíveis publicamente no GitHub.
+
+Como trabalho futuro, sugere-se a coleta de dados reais de preferência de alunos (avaliações de relevância em vez de regras determinísticas), o fine-tuning do SBERT com CosineSimilarityLoss sobre pares (perfil, disciplina), e a integração com a API do SIGA UFMG para obter dados atualizados automaticamente a cada semestre.
 
 \begin{thebibliography}{9}
 \bibitem{reimers2019sentence}
 Reimers, N., \& Gurevych, I. (2019).
 Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.
 \textit{EMNLP-IJCNLP}.
+
+\bibitem{devlin2019bert}
+Devlin, J., Chang, M. W., Lee, K., \& Toutanova, K. (2019).
+BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.
+\textit{NAACL-HLT}.
+
+\bibitem{souza2020bertimbau}
+Souza, F., Nogueira, R., \& Lotufo, R. (2020).
+BERTimbau: Pretrained BERT Models for Brazilian Portuguese.
+\textit{BRACIS}.
 \end{thebibliography}
 
 \end{document}

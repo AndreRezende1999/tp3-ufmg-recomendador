@@ -65,6 +65,8 @@ def generate_period_prefix_profiles(disciplines: pd.DataFrame, *, period_column:
 
 def generate_elective_variants(disciplines: pd.DataFrame, base_profiles: Iterable[SyntheticProfile], *, group_column: str = "grupo_optativa") -> list[SyntheticProfile]:
     """Adiciona variantes com optativas ao conjunto de perfis base."""
+    if group_column not in disciplines.columns:
+        return []
     variants: list[SyntheticProfile] = []
     grouped = disciplines.dropna(subset=[group_column]).groupby(group_column)
     elective_groups = {group_name: group_df["codigo"].dropna().astype(str).tolist() for group_name, group_df in grouped}

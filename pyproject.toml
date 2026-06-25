@@ -24,6 +24,7 @@ dependencies = [
   "tqdm>=4.66",
   "transformers>=4.43",
   "sentence-transformers>=3.0",
+  "gradio>=4.0",
 ]
 
 [tool.setuptools]

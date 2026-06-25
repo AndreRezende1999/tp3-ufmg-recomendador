@@ -1,6 +1,8 @@
+"""Fine-tuning do BERT classificador e do Sentence-BERT."""
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 import numpy as np
@@ -12,6 +14,10 @@ from transformers import AutoTokenizer, BertForSequenceClassification, get_linea
 
 from .config import MODEL_NAME
 
+
+# ===================================================================
+# Dataset de pares (perfil, candidata) para o classificador BERT
+# ===================================================================
 
 class PairTextDataset(Dataset):
     def __init__(self, dataframe: pd.DataFrame, tokenizer, max_length_profile: int = 384, max_length_candidate: int = 192):
@@ -38,6 +44,10 @@ class PairTextDataset(Dataset):
         return item
 
 
+# ===================================================================
+# Estágios de treino progressivo
+# ===================================================================
+
 @dataclass
 class TrainingStage:
     name: str
@@ -47,11 +57,13 @@ class TrainingStage:
 
 
 def freeze_encoder(model: BertForSequenceClassification) -> None:
+    """Congela todos os parâmetros do encoder BERT."""
     for parameter in model.bert.parameters():
         parameter.requires_grad = False
 
 
 def unfreeze_last_layers(model: BertForSequenceClassification, num_layers: int = 2) -> None:
+    """Descongela as últimas N camadas do encoder + classificador."""
     freeze_encoder(model)
     encoder_layers = model.bert.encoder.layer
     for layer in encoder_layers[-num_layers:]:
@@ -65,19 +77,27 @@ def unfreeze_last_layers(model: BertForSequenceClassification, num_layers: int =
 
 
 def unfreeze_all(model: BertForSequenceClassification) -> None:
+    """Descongela todos os parâmetros."""
     for parameter in model.parameters():
         parameter.requires_grad = True
 
 
 def create_model(num_labels: int = 2) -> BertForSequenceClassification:
+    """Cria modelo BertForSequenceClassification a partir do BERTimbau."""
     return BertForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=num_labels)
 
 
 def create_tokenizer():
+    """Cria tokenizer do BERTimbau."""
     return AutoTokenizer.from_pretrained(MODEL_NAME)
 
 
+# ===================================================================
+# Loop de treino e avaliação
+# ===================================================================
+
 def train_stage(model, data_loader, optimizer, scheduler, device):
+    """Executa uma época de treino."""
     model.train()
     total_loss = 0.0
     for batch in data_loader:
@@ -93,6 +113,7 @@ def train_stage(model, data_loader, optimizer, scheduler, device):
 
 
 def predict(model, data_loader, device):
+    """Gera predições e probabilidades."""
     model.eval()
     predictions: list[int] = []
     labels: list[int] = []
@@ -111,6 +132,7 @@ def predict(model, data_loader, device):
 
 
 def evaluate_model(model, data_loader, device):
+    """Avalia o modelo no data_loader e retorna métricas."""
     labels, predictions, probabilities = predict(model, data_loader, device)
     return {
         "labels": labels,
@@ -122,6 +144,7 @@ def evaluate_model(model, data_loader, device):
 
 
 def fit_three_stage_model(train_df: pd.DataFrame, validation_df: pd.DataFrame, *, batch_size: int = 8, seed: int = 42) -> tuple[BertForSequenceClassification, list[dict[str, float]]]:
+    """Fine-tuning progressivo em 3 estágios: head → últimas camadas → full."""
     torch.manual_seed(seed)
     tokenizer = create_tokenizer()
     model = create_model(num_labels=2)
@@ -158,3 +181,58 @@ def fit_three_stage_model(train_df: pd.DataFrame, validation_df: pd.DataFrame, *
             history.append({"stage": stage.name, "loss": loss, "accuracy": evaluation["accuracy"], "f1": evaluation["f1"]})
 
     return model, history
+
+
+# ===================================================================
+# Fine-tuning do Sentence-BERT com CosineSimilarityLoss
+# ===================================================================
+
+def fine_tune_sbert(
+    train_pairs: pd.DataFrame,
+    validation_pairs: pd.DataFrame,
+    model_name: str | None = None,
+    output_path: str | Path = "models/sbert-finetuned",
+    epochs: int = 3,
+    batch_size: int = 16,
+) -> "SentenceTransformer":
+    """Fine-tuna o SBERT com pares (text_a, text_b, label_score) via CosineSimilarityLoss.
+
+    Espera DataFrames com colunas: text_a, text_b, label (float 0.0–1.0).
+    """
+    from sentence_transformers import SentenceTransformer, InputExample, losses
+    from sentence_transformers.evaluation import EmbeddingSimilarityEvaluator
+    from torch.utils.data import DataLoader as STDataLoader
+
+    name = model_name or MODEL_NAME
+    model = SentenceTransformer(name)
+
+    # Monta exemplos de treino
+    train_examples = [
+        InputExample(texts=[str(row["text_a"]), str(row["text_b"])],
+                     label=float(row["label"]))
+        for _, row in train_pairs.iterrows()
+    ]
+    train_dataloader = STDataLoader(train_examples, shuffle=True, batch_size=batch_size)
+    train_loss = losses.CosineSimilarityLoss(model)
+
+    # Avaliador de validação
+    evaluator = None
+    if not validation_pairs.empty:
+        evaluator = EmbeddingSimilarityEvaluator(
+            sentences1=validation_pairs["text_a"].astype(str).tolist(),
+            sentences2=validation_pairs["text_b"].astype(str).tolist(),
+            scores=validation_pairs["label"].astype(float).tolist(),
+            name="validacao",
+        )
+
+    # Treino
+    output_path = Path(output_path)
+    output_path.mkdir(parents=True, exist_ok=True)
+    model.fit(
+        train_objectives=[(train_dataloader, train_loss)],
+        evaluator=evaluator,
+        epochs=epochs,
+        output_path=str(output_path),
+        show_progress_bar=True,
+    )
+    return model

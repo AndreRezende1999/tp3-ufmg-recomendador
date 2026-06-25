@@ -18,6 +18,7 @@ Requires-Dist: seaborn>=0.13
 Requires-Dist: torch>=2.2
 Requires-Dist: tqdm>=4.66
 Requires-Dist: transformers>=4.43
+Requires-Dist: sentence-transformers>=3.0
 
 # TP3 UFMG - Recomendador de Próximas Disciplinas
 

@@ -1,27 +1,37 @@
-# TP3 UFMG - Recomendador de Próximas Disciplinas
+# TP3 FIA — Recomendador de Disciplinas (Eng. Sistemas UFMG)
 
-Projeto para o Trabalho Prático III de Fundamentos de Inteligência Artificial (UFMG).
+ChatBot de recomendação de disciplinas para estudantes de Engenharia de Sistemas da UFMG, usando busca semântica com Sentence-BERT fine-tuned.
 
 ## Estrutura
 
-- `src/scraping.py`: coleta e cache das fontes públicas da UFMG.
-- `src/data_curation.py`: reconciliação das fontes e montagem da tabela única de disciplinas.
-- `src/synthetic_profile_generator.py`: geração dos perfis sintéticos e dos pares de treino.
-- `src/baseline_no_text.py`: baseline estrutural sem texto.
-- `src/train_bert_classifier.py`: fine-tuning local de BERT em pares de textos.
-- `src/evaluate.py`: métricas, matriz de confusão e comparação entre modelos.
-- `src/recommender_rules.py`: filtro de pré-requisitos e balanceamento de dificuldade.
-- `notebooks/TP3_Classificador_Disciplinas_UFMG.ipynb`: notebook final autossuficiente.
+- `data/disciplinas_engsis.json` — tabela curada de 80 disciplinas da grade 2026/1 (código, nome, ementa, período, pré-requisitos, dificuldade).
+- `data/dificuldade_engsis.csv` — base da planilha de avaliação de dificuldade dos alunos.
+- `src/config.py` — configurações centrais e caminhos.
+- `src/data_curation.py` — carga e preparação dos dados unificados.
+- `src/sbert_encoder.py` — codificação via SBERT e motor de busca semântica (cosseno).
+- `src/train_bert_classifier.py` — pipeline para fine-tuning do SBERT e BERT-base.
+- `src/synthetic_profile_generator.py` — gerador de perfis de estudo e pares sintéticos de treino.
+- `src/baseline_no_text.py` — baseline estrutural sem processamento de texto.
+- `src/evaluate.py` — métricas de avaliação e comparação.
+- `src/recommender_rules.py` — regras rigorosas (pré-requisitos) e balanceamento de dificuldade para sugerir a grade ideal do semestre.
+- `notebooks/TP3_Classificador_Disciplinas_UFMG.ipynb` — notebook principal interativo (seguindo o padrão das aulas práticas).
 
-## Dados necessários
+## Instalação e Execução
 
-- PDFs e HTML oficiais da UFMG, baixados localmente e cacheados.
-- Planilha de dificuldade das disciplinas. O link informado na conversa é um Google Sheets publicado; ele pode ser usado como fonte, mas o pipeline espera que o arquivo seja baixado e cacheado localmente antes do processamento.
+O projeto gerencia suas dependências localmente. Crie o ambiente, instale o pacote local e execute o Jupyter Notebook:
 
-## Próximos passos
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+jupyter notebook notebooks/TP3_Classificador_Disciplinas_UFMG.ipynb
+```
 
-1. Baixar e cachear as fontes públicas.
-2. Extrair e normalizar as disciplinas.
-3. Gerar perfis sintéticos e pares rotulados.
-4. Treinar o baseline e o BERT localmente.
-5. Integrar tudo no notebook final.
+O download dos pesos originais do `neuralmind/bert-base-portuguese-cased` ocorrerá de forma automática na primeira execução (requer internet).
+
+## Arquitetura de Recomendação
+
+O fluxo adota as seguintes etapas:
+1. Um input natural ("Gosto muito de IA e dados") é convertido para embedding usando Sentence-BERT.
+2. É calculada a similaridade semântica (Cosseno) contra os vetores pré-computados das 80 disciplinas.
+3. As top N disciplinas mais similares passam por validação de **Pré-Requisitos** baseados no PPC e filtro guloso de **Dificuldade** baseado em avaliações estudantis, gerando a recomendação ideal para o estudante no momento.

@@ -23,6 +23,7 @@ dependencies = [
   "torch>=2.2",
   "tqdm>=4.66",
   "transformers>=4.43",
+  "sentence-transformers>=3.0",
 ]
 
 [tool.setuptools]

@@ -1,3 +1,4 @@
+"""Baseline estrutural sem texto — regressão logística sobre features numéricas."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -19,6 +20,7 @@ class BaselineResult:
 
 
 def build_structural_features(pairs: pd.DataFrame) -> pd.DataFrame:
+    """Constrói features estruturais (sem texto) a partir dos pares."""
     data = pairs.copy()
     data["completed_count"] = data["completed_codes"].map(lambda values: len(values) if isinstance(values, list) else 0)
     data["prerequisites_met_int"] = data["prerequisites_met"].astype(int)
@@ -30,6 +32,7 @@ def build_structural_features(pairs: pd.DataFrame) -> pd.DataFrame:
 
 
 def train_baseline(train_pairs: pd.DataFrame, validation_pairs: pd.DataFrame | None = None) -> Pipeline:
+    """Treina o baseline com regressão logística sobre features estruturais."""
     feature_builder = ColumnTransformer(
         transformers=[
             ("numeric", Pipeline([("scaler", StandardScaler())]), ["completed_count", "prerequisites_met_int", "same_track_int", "next_required_int", "candidate_length", "profile_length"]),
@@ -48,6 +51,7 @@ def train_baseline(train_pairs: pd.DataFrame, validation_pairs: pd.DataFrame | N
 
 
 def evaluate_baseline(model: Pipeline, test_pairs: pd.DataFrame) -> dict[str, float]:
+    """Avalia o baseline no conjunto de teste."""
     test_features = build_structural_features(test_pairs)
     predictions = model.predict(test_features)
     return {

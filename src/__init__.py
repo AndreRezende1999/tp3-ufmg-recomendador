@@ -1,1 +1,1 @@
-"""TP3 UFMG recommendation package."""
+"""TP3 FIA — Recomendador de Disciplinas para Engenharia de Sistemas (UFMG)."""

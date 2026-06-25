@@ -1,3 +1,4 @@
+"""Regras de filtragem de pré-requisitos e balanceamento por dificuldade."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,11 +17,13 @@ class RecommendationCandidate:
 
 
 def prerequisites_satisfied(candidate_row: pd.Series, completed_codes: Iterable[str]) -> bool:
+    """Verifica se todos os pré-requisitos da candidata foram cursados."""
     prerequisites = set(candidate_row.get("pre_requisitos", []) or [])
     return prerequisites.issubset(set(completed_codes))
 
 
 def filter_recommended_candidates(candidates: pd.DataFrame, completed_codes: Iterable[str]) -> pd.DataFrame:
+    """Filtra candidatas cujos pré-requisitos estão satisfeitos."""
     if candidates.empty:
         return candidates.copy()
     mask = candidates.apply(lambda row: prerequisites_satisfied(row, completed_codes), axis=1)
@@ -28,6 +31,7 @@ def filter_recommended_candidates(candidates: pd.DataFrame, completed_codes: Ite
 
 
 def greedy_balance_by_difficulty(candidates: pd.DataFrame, *, difficulty_budget: float, max_courses: int | None = None) -> pd.DataFrame:
+    """Seleciona disciplinas de forma gulosa respeitando orçamento de dificuldade."""
     if candidates.empty:
         return candidates.copy()
 

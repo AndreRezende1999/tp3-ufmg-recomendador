@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+src/tp3_ufmg_recomendador.egg-info/PKG-INFO
+src/tp3_ufmg_recomendador.egg-info/SOURCES.txt
+src/tp3_ufmg_recomendador.egg-info/dependency_links.txt
+src/tp3_ufmg_recomendador.egg-info/requires.txt
+src/tp3_ufmg_recomendador.egg-info/top_level.txt

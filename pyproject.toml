@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tp3-ufmg-recomendador"
+version = "0.1.0"
+description = "TP3 Fundamentos de IA - classificador de proximas disciplinas da UFMG"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "joblib>=1.4",
+  "matplotlib>=3.8",
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "pdfplumber>=0.11",
+  "pymupdf>=1.24",
+  "pyyaml>=6.0",
+  "requests>=2.32",
+  "scikit-learn>=1.5",
+  "seaborn>=0.13",
+  "torch>=2.2",
+  "tqdm>=4.66",
+  "transformers>=4.43",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

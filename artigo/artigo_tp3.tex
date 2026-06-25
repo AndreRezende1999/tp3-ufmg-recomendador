@@ -1,0 +1,76 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{geometry}
+\geometry{a4paper, margin=2cm}
+
+\title{\Large \bf Sistema de Recomendação de Disciplinas com Busca Semântica (SBERT) e Balanceamento de Carga Curricular}
+\author{Trabalho Prático III - Fundamentos de Inteligência Artificial\\
+Engenharia de Sistemas -- Universidade Federal de Minas Gerais (UFMG)
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A montagem da grade de disciplinas em cursos de graduação flexíveis é um desafio complexo, exigindo que os estudantes equilibrem seus interesses pessoais, restrições estruturais de pré-requisitos e a dificuldade imposta pela carga de trabalho simultânea. Este artigo propõe a modelagem e construção de um recomendador inteligente (base para um ChatBot interativo) para o curso de Engenharia de Sistemas da UFMG. Utilizando Transferência de Aprendizado (Transfer Learning) sobre a arquitetura Sentence-BERT (SBERT), o sistema traduz inputs em linguagem natural em preferências curriculares e calcula a similaridade cosseno com as ementas da oferta de disciplinas. Adicionalmente, as recomendações brutas passam por um algoritmo guloso que valida os pré-requisitos e limita a carga total de dificuldade com base na percepção empírica de estudantes. Os resultados demonstram coerência semântica e aderência estrita às regras do Projeto Pedagógico do Curso.
+\end{abstract}
+
+\section{Introdução}
+
+Com a expansão da flexibilidade curricular na educação superior, os estudantes enfrentam o desafio de compor seus planos de estudo semestrais de forma otimizada. Decisões baseadas unicamente no nome das disciplinas podem resultar em semestres sobrecarregados ou que não agregam ao percurso desejado pelo aluno.
+
+O objetivo deste projeto, desenvolvido como o Trabalho Prático III (TP3) da disciplina de Fundamentos de Inteligência Artificial da UFMG, é a construção do motor base de um ChatBot que apoie o percurso do estudante. O problema foi modelado em duas frentes: a extração de similaridade semântica para capturar o "interesse" do estudante, e a otimização restrita para aplicar o rigor acadêmico do PPC (Projeto Pedagógico do Curso) e da dificuldade.
+
+Para o entendimento semântico, optou-se pela utilização de modelos avançados de Processamento de Linguagem Natural (NLP), especificamente técnicas de Transferência de Aprendizado a partir de modelos pré-treinados, que se sobressaem na captura de nuances da linguagem em relação a abordagens estatísticas puras como o TF-IDF.
+
+\section{Metodologia}
+
+O desenvolvimento do sistema foi dividido em três grandes módulos lógicos: Curadoria de Dados, Codificação Semântica, e Filtros Estruturais.
+
+\subsection{Curadoria e Integração de Dados}
+A base de dados adotada compreende $80$ disciplinas extraídas diretamente do Mapa de Oferta de Engenharia de Sistemas (semestre 2026/1) e do PPC oficial do curso.
+Para quantificar o impacto de cada disciplina na carga semestral do aluno, foi realizada uma fusão destes dados estruturais com uma planilha colaborativa mantida pelos estudantes, contendo métricas avaliativas de ``Dificuldade'' e ``Trabalho''. Desta forma, cada disciplina $d$ foi modelada contendo: Nome, Ementa, Período Sugerido, Conjunto de Pré-requisitos ($R_d$) e Score de Dificuldade ($W_d$).
+
+\subsection{Busca Semântica com SBERT}
+Em vez de utilizar modelos generativos autoregressivos (como as famílias GPT) que são otimizados para a geração estrita de linguagem, o projeto empregou uma arquitetura baseada em \textit{Encoders} Bidirecionais, ideal para representações densas.
+
+Utilizou-se o modelo \texttt{neuralmind/bert-base-portuguese-cased}, cujo conhecimento prévio da língua portuguesa foi aproveitado por \textit{Transfer Learning}. A arquitetura Sentence-BERT \cite{reimers2019sentence} foi adaptada para gerar \textit{embeddings} de tamanho fixo tanto para os históricos e interesses do estudante (query $q$) quanto para o corpus de ementas das disciplinas.
+A proximidade entre o interesse do estudante e a disciplina candidata é mensurada pelo cálculo da Similaridade de Cosseno:
+\begin{equation}
+    \text{Sim}(q, d) = \frac{\mathbf{q} \cdot \mathbf{d}}{\|\mathbf{q}\| \|\mathbf{d}\|}
+\end{equation}
+
+\subsection{Filtros de Regras de Negócio e Balanceamento Guloso}
+Após o ranqueamento estritamente semântico, o algoritmo impõe regras estruturais da grade:
+\begin{itemize}
+    \item \textbf{Verificação de Pré-requisitos:} Uma disciplina $d$ só é aceita se o conjunto de disciplinas já cursadas pelo aluno $C$ contiver todos os seus pré-requisitos, ou seja, se $R_d \subseteq C$.
+    \item \textbf{Balanceamento por Dificuldade:} Disciplinas válidas são adicionadas recursivamente à grade recomendada de forma gulosa (\textit{greedy}) até que a soma das dificuldades exceda o orçamento máximo do semestre estipulado pelo aluno ou pelo sistema.
+\end{itemize}
+
+\section{Resultados Preliminares}
+
+Os experimentos realizados em ambiente de simulação no Jupyter Notebook evidenciaram que o SBERT é altamente eficaz em abstrair interesses. Por exemplo, ao receber a query \textit{``Tenho interesse em modelagem e dados''}, o modelo superou a necessidade de \textit{keyword matching} exato e inferiu ligações semânticas com disciplinas de inteligência artificial, estatística e algoritmos.
+
+A integração dos filtros guloso e de pré-requisitos provou-se fundamental, uma vez que o modelo SBERT, embora eficiente semanticamente, desconhece o plano cartesiano estrutural da graduação. O sistema conseguiu interceptar falsos positivos semânticos (ex: disciplinas avançadas de aprendizagem de máquina requeridas por um calouro) substituindo-os dinamicamente por matérias do ciclo básico que serviriam de base, além de impedir cenários em que o semestre somaria uma nota de dificuldade estatisticamente inviável (baseada nas planilhas do curso).
+
+\section{Conclusão e Trabalhos Futuros}
+
+A técnica de Transfer Learning aplicada ao processamento bidirecional da linguagem provou-se a abordagem correta para mapear a preferência de alunos dentro do léxico acadêmico das ementas. A robustez final do projeto deu-se pela união deste motor probabilístico de ponta com lógicas clássicas e rigorosas baseadas em grafos e limite de capacidade (Dificuldade).
+Como trabalho futuro, planeja-se integrar a API do modelo rodando localmente a um front-end interativo, como o Gradio, encapsulando este \textit{pipeline} num ChatBot que conduzirá a entrevista em linguagem natural de ponta a ponta com o aluno.
+
+\begin{thebibliography}{9}
+\bibitem{reimers2019sentence}
+Reimers, N., \& Gurevych, I. (2019).
+Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.
+\textit{EMNLP-IJCNLP}.
+\end{thebibliography}
+
+\end{document}

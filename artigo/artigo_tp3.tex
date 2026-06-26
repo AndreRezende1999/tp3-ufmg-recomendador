@@ -8,6 +8,7 @@
 \usepackage{booktabs}
 \usepackage{geometry}
 \usepackage{float}
+\usepackage{indentfirst}
 \geometry{a4paper, margin=2.5cm}
 
 \title{\Large \textbf{Recomendador de Disciplinas com Busca Semântica (SBERT),\\Filtros Estruturais e Balanceamento de Carga Curricular}}
@@ -49,6 +50,7 @@ Este trabalho propõe um motor de recomendação que combina \textbf{Transfer Le
 O objetivo geral deste trabalho é desenvolver um sistema de recomendação de disciplinas que una compreensão semântica em português brasileiro com o rigor das restrições acadêmicas do Projeto Pedagógico do Curso (PPC) de Engenharia de Sistemas da UFMG.
 
 Os objetivos específicos são:
+
 \begin{enumerate}
     \item Construir uma base de dados unificada integrando ementas, horários, dificuldade e pré-requisitos das 76 disciplinas do curso;
     \item Implementar busca semântica com Sentence-BERT (BERTimbau) para ranquear disciplinas por similaridade de cosseno com o perfil do aluno;

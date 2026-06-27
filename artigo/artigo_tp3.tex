@@ -31,13 +31,13 @@
 \section*{Resumo}
 % ======================================================================
 
-Este relatório apresenta um sistema de recomendação de disciplinas para o curso de Engenharia de Sistemas da UFMG, desenvolvido como Trabalho Prático III da disciplina Fundamentos de Inteligência Artificial. O sistema integra busca semântica com Sentence-BERT (modelo BERTimbau), classificador BERT com fine-tuning progressivo em três estágios, e filtros estruturais determinísticos para pré-requisitos, balanceamento de dificuldade e prevenção de conflitos de horário. A base de dados compreende 76 disciplinas com ementas do site GEES UFMG, horários da grade oficial e métricas de dificuldade de uma planilha colaborativa estudantil. Os resultados demonstram que a arquitetura híbrida é essencial: o SBERT isolado atinge Precision@10 de apenas 2,86\%, pois ranqueia exclusivamente por afinidade semântica sem conhecer a estrutura curricular; com a aplicação dos filtros estruturais, a recomendação final atinge 100\% de aderência às regras do PPC. Uma interface interativa em Streamlit complementa o sistema, permitindo que alunos explorem recomendações em tempo real.
+Este relatório apresenta um sistema de recomendação de disciplinas para o curso de Engenharia de Sistemas da UFMG, desenvolvido como Trabalho Prático III da disciplina Fundamentos de Inteligência Artificial. O sistema integra três componentes: busca semântica com Sentence-BERT (modelo BERTimbau), classificador BERT com fine-tuning progressivo em três estágios, e filtros estruturais determinísticos para pré-requisitos, balanceamento de dificuldade e prevenção de conflitos de horário. A base de dados compreende 76 disciplinas com ementas do site GEES UFMG, horários da grade oficial e métricas de dificuldade de uma planilha colaborativa estudantil. Os resultados demonstram que a arquitetura híbrida é essencial. O SBERT isolado atinge Precision@10 de apenas 2,86\%, pois ranqueia exclusivamente por afinidade semântica sem conhecer a estrutura curricular. Com a aplicação dos filtros estruturais, a recomendação final atinge 100\% de aderência às regras do PPC. Uma interface interativa em Streamlit complementa o sistema, permitindo que alunos explorem recomendações em tempo real.
 
 % ======================================================================
 \section{Introdução}
 % ======================================================================
 
-Com a crescente flexibilidade curricular na educação superior, estudantes enfrentam o desafio de compor planos de estudo semestrais otimizados. No curso de Engenharia de Sistemas da UFMG, são 76 disciplinas disponíveis, com pré-requisitos encadeados, horários distribuídos em diferentes turnos e níveis de dificuldade variados — fatores que, isoladamente, já tornam a decisão complexa. Decisões baseadas apenas no nome da disciplina ou em uma leitura superficial da ementa podem resultar em semestres sobrecarregados ou desconexos do percurso desejado pelo aluno.
+Com a crescente flexibilidade curricular na educação superior, estudantes enfrentam o desafio de compor planos de estudo semestrais otimizados. No curso de Engenharia de Sistemas da UFMG, são 76 disciplinas disponíveis, com pré-requisitos encadeados, horários distribuídos em diferentes turnos e níveis de dificuldade variados. Esses fatores, isoladamente, já tornam a decisão complexa. Decisões baseadas apenas no nome da disciplina ou em uma leitura superficial da ementa podem resultar em semestres sobrecarregados ou desconexos do percurso desejado pelo aluno.
 
 Neste contexto, técnicas de Processamento de Linguagem Natural (NLP) e Transfer Learning oferecem uma oportunidade de aproximar a recomendação acadêmica da compreensão semântica dos interesses do estudante. Modelos pré-treinados como o BERT~\cite{devlin2019bert}, e sua variante para o português brasileiro, o BERTimbau~\cite{souza2020bertimbau}, permitem codificar textos em vetores densos que capturam similaridade semântica entre conceitos. Com a adaptação via Sentence-BERT~\cite{reimers2019sentence}, é possível gerar embeddings de tamanho fixo adequados para busca por similaridade de cosseno, viabilizando o ranqueamento de disciplinas por afinidade temática com o perfil do aluno.
 
@@ -148,7 +148,7 @@ A arquitetura do sistema segue um pipeline de cinco etapas. As três primeiras o
 
 \subsection{Busca semântica com Sentence-BERT}
 
-Utilizou-se o modelo \texttt{neuralmind/bert-base-portuguese-cased}, pré-treinado em 2,7 bilhões de tokens de texto em português (Wikipedia PT + BrWaC), adaptado via Sentence-BERT~\cite{reimers2019sentence} para gerar embeddings de tamanho fixo (768 dimensões). O SBERT foi escolhido em detrimento do BERT base por duas razões: (1) produz embeddings semanticamente significativos sem necessidade de uma tarefa de classificação auxiliar; e (2) permite busca por similaridade de cosseno em tempo constante após a codificação do corpus.
+Utilizou-se o modelo \texttt{neuralmind/bert-base-portuguese-cased}, pré-treinado em 2,7 bilhões de tokens de texto em português (Wikipedia PT + BrWaC), adaptado via Sentence-BERT~\cite{reimers2019sentence} para gerar embeddings de tamanho fixo (768 dimensões). O SBERT foi preferido ao BERT base por duas razões: (1) produz embeddings semanticamente significativos sem necessidade de uma tarefa de classificação auxiliar; e (2) permite busca por similaridade de cosseno em tempo constante após a codificação do corpus.
 
 O corpus é composto pelas ementas enriquecidas com nome da disciplina e área de conhecimento. A similaridade entre o perfil textual do estudante ($q$) e cada disciplina candidata ($d$) é calculada pela similaridade de cosseno:
 
@@ -201,7 +201,7 @@ Esta abordagem resultou em 357 pares de treino, 51 de validação e 100 de teste
 
 \subsection{Baseline estrutural}
 
-Um baseline de Regressão Logística foi treinado sobre três features puramente estruturais: (1) pré-requisitos satisfeitos (booleana); (2) mesmo trilho de optativa (booleana); e (3) período seguinte ao máximo concluído (booleana). Este baseline não utiliza nenhuma informação semântica das ementas — apenas as regras do PPC. Seu propósito é servir como \textit{sanity check}: se o baseline atingir 100\% de acurácia, confirma-se que os labels foram gerados corretamente e que a tarefa é estruturalmente determinística.
+Um baseline de Regressão Logística foi treinado sobre três features puramente estruturais: (1) pré-requisitos satisfeitos (booleana); (2) mesmo trilho de optativa (booleana); e (3) período seguinte ao máximo concluído (booleana). Este baseline não utiliza nenhuma informação semântica das ementas, operando apenas sobre as regras do PPC. Seu propósito é servir como \textit{sanity check}: se o baseline atingir 100\% de acurácia, confirma-se que os labels foram gerados corretamente e que a tarefa é estruturalmente determinística.
 
 % ======================================================================
 \section{Configuração Experimental}
@@ -219,7 +219,7 @@ Para validação qualitativa, foram simulados 6 cenários de recomendação: cal
 
 \subsection{Métricas de classificação}
 
-A Tabela~\ref{tab:metrics} apresenta as métricas de avaliação do sistema. O baseline de regressão logística atingiu 100\% de acurácia e F1, confirmando a corretude da geração dos labels sintéticos. O BERT fine-tuned, por sua vez, atingiu 89\% de acurácia mas F1 de 0,00 — resultado que evidencia o impacto do desbalanceamento severo dos dados.
+A Tabela~\ref{tab:metrics} apresenta as métricas de avaliação do sistema. O baseline de regressão logística atingiu 100\% de acurácia e F1, confirmando a corretude da geração dos labels sintéticos. O BERT fine-tuned, por sua vez, atingiu 89\% de acurácia mas F1 de 0,00, resultado que evidencia o impacto do desbalanceamento severo dos dados.
 
 \begin{table}[H]
 \centering
@@ -258,7 +258,7 @@ Conflitos de horário           & 0 \\
 
 \subsection{Métricas de busca semântica}
 
-O SBERT atingiu Precision@10 de 2,86\% e MRR de 0,076. O baixo desempenho em métricas de recuperação é esperado e não indica falha do modelo de embeddings. Pelo contrário, ele demonstra precisamente por que a busca puramente semântica é inadequada para recomendação de disciplinas: o SBERT rankeia corretamente disciplinas por afinidade temática (ex.: uma consulta sobre ``IA'' retorna disciplinas de Computação e Estatística com alta similaridade), mas essas disciplinas frequentemente possuem pré-requisitos não atendidos ou pertencem a períodos muito distantes na grade.
+O SBERT atingiu Precision@10 de 2,86\% e MRR de 0,076. O baixo desempenho em métricas de recuperação é esperado e não indica falha do modelo de embeddings. Pelo contrário, ele demonstra precisamente por que a busca puramente semântica é inadequada para recomendação de disciplinas. O SBERT ranqueia corretamente disciplinas por afinidade temática: uma consulta sobre ``IA'' retorna disciplinas de Computação e Estatística com alta similaridade. No entanto, essas disciplinas frequentemente possuem pré-requisitos não atendidos ou pertencem a períodos muito distantes na grade curricular.
 
 \subsection{Cenários simulados}
 
@@ -288,11 +288,11 @@ Generalista              & ``Qualquer área de engenharia''      & 5 & 0 \\
 
 \subsection{Análise do classificador BERT}
 
-A discrepância entre acurácia (89\%) e F1 (0,00) do BERT fine-tuned é explicada pelo desbalanceamento severo dos dados: 94\% dos exemplos são negativos. Um classificador trivial que prevê ``não relevante'' para todas as entradas atinge 94\% de acurácia — o BERT está essencialmente colapsando para esta estratégia. A correção passa por técnicas de balanceamento como \texttt{pos\_weight} no cálculo da loss (atribuindo peso maior aos exemplos positivos) ou \texttt{WeightedRandomSampler} no DataLoader. Esta é uma limitação conhecida, com correção prevista para a próxima iteração do projeto.
+A discrepância entre acurácia (89\%) e F1 (0,00) do BERT fine-tuned é explicada pelo desbalanceamento severo dos dados: 94\% dos exemplos são negativos. Um classificador trivial que prevê ``não relevante'' para todas as entradas atinge 94\% de acurácia; o BERT está essencialmente colapsando para esta estratégia. A correção passa por técnicas de balanceamento como \texttt{pos\_weight} no cálculo da loss (atribuindo peso maior aos exemplos positivos) ou \texttt{WeightedRandomSampler} no DataLoader. Esta é uma limitação conhecida, com correção prevista para a próxima iteração do projeto.
 
 \subsection{Análise da arquitetura híbrida}
 
-O principal resultado deste trabalho é a demonstração empírica de que a arquitetura híbrida — semântica $+$ regras — é não apenas desejável, mas necessária para o domínio de recomendação acadêmica. O SBERT isolado é insuficiente (Precision@10 de 2,86\%) pois desconhece a estrutura curricular; os filtros são corretos mas não capturam interesses pessoais. A combinação dos dois produz recomendações semanticamente relevantes e academicamente viáveis.
+O principal resultado deste trabalho é a demonstração empírica de que a arquitetura híbrida, que combina semântica e regras estruturais, é não apenas desejável mas necessária para o domínio de recomendação acadêmica. O SBERT isolado é insuficiente (Precision@10 de 2,86\%) pois desconhece a estrutura curricular; os filtros são corretos mas não capturam interesses pessoais. A combinação dos dois produz recomendações semanticamente relevantes e academicamente viáveis.
 
 O fine-tuning progressivo em três estágios demonstrou ser uma estratégia adequada para datasets pequenos, evitando overfitting ao descongelar o modelo gradualmente. Contudo, o desbalanceamento de classes dominou o comportamento do classificador, indicando que a qualidade dos dados (balanceamento e representatividade) é tão importante quanto a arquitetura do modelo.
 
@@ -338,7 +338,7 @@ Orçamento de dificuldade: 15.6 / 22 $\;$ | $\;$ 0 conflitos de horário
 
 Este trabalho apresentou um sistema de recomendação de disciplinas para o curso de Engenharia de Sistemas da UFMG, integrando busca semântica com Sentence-BERT (BERTimbau), classificador BERT com fine-tuning progressivo e filtros estruturais determinísticos. A principal contribuição é a demonstração de que a arquitetura híbrida é essencial para o domínio: o SBERT captura a dimensão subjetiva dos interesses do aluno, enquanto as regras de pré-requisitos, balanceamento de dificuldade e prevenção de conflitos conferem rigor acadêmico às recomendações.
 
-Os resultados quantitativos evidenciam que a busca semântica isolada é insuficiente (Precision@10 de 2,86\%, MRR de 0,076), mas os filtros estruturais elevam a qualidade final a 100\% de aderência ao PPC. O fine-tuning progressivo em três estágios mostrou-se adequado, porém o desbalanceamento de classes (94\% negativos) comprometeu o F1 do classificador BERT — limitação a ser corrigida com técnicas de re-ponderação da loss.
+Os resultados quantitativos evidenciam que a busca semântica isolada é insuficiente (Precision@10 de 2,86\%, MRR de 0,076), mas os filtros estruturais elevam a qualidade final a 100\% de aderência ao PPC. O fine-tuning progressivo em três estágios mostrou-se adequado, porém o desbalanceamento de classes (94\% negativos) comprometeu o F1 do classificador BERT, limitação a ser corrigida com técnicas de re-ponderação da loss.
 
 Como trabalhos futuros, destacam-se:
 \begin{enumerate}

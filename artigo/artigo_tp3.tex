@@ -39,7 +39,7 @@ Este relatório apresenta um sistema de recomendação de disciplinas para o cur
 
 Com a crescente flexibilidade curricular na educação superior, estudantes enfrentam o desafio de compor planos de estudo semestrais otimizados. No curso de Engenharia de Sistemas da UFMG, são 76 disciplinas disponíveis, com pré-requisitos encadeados, horários distribuídos em diferentes turnos e níveis de dificuldade variados. Esses fatores, isoladamente, já tornam a decisão complexa. Decisões baseadas apenas no nome da disciplina ou em uma leitura superficial da ementa podem resultar em semestres sobrecarregados ou desconexos do percurso desejado pelo aluno.
 
-Neste contexto, técnicas de Processamento de Linguagem Natural (NLP) e Transfer Learning oferecem uma oportunidade de aproximar a recomendação acadêmica da compreensão semântica dos interesses do estudante. Modelos pré-treinados como o BERT~\cite{devlin2019bert}, e sua variante para o português brasileiro, o BERTimbau~\cite{souza2020bertimbau}, permitem codificar textos em vetores densos que capturam similaridade semântica entre conceitos. Com a adaptação via Sentence-BERT~\cite{reimers2019sentence}, é possível gerar embeddings de tamanho fixo adequados para busca por similaridade de cosseno, viabilizando o ranqueamento de disciplinas por afinidade temática com o perfil do aluno.
+Neste contexto, técnicas de Processamento de Linguagem Natural (NLP) e Transfer Learning oferecem uma oportunidade de aproximar a recomendação acadêmica da compreensão semântica dos interesses do estudante. Modelos pré-treinados como o BERT~\cite{devlin2019bert}, baseado na arquitetura Transformer~\cite{vaswani2017attention}, e sua variante para o português brasileiro, o BERTimbau~\cite{souza2020bertimbau}, permitem codificar textos em vetores densos que capturam similaridade semântica entre conceitos. Com a adaptação via Sentence-BERT~\cite{reimers2019sentence}, é possível gerar embeddings de tamanho fixo adequados para busca por similaridade de cosseno, viabilizando o ranqueamento de disciplinas por afinidade temática com o perfil do aluno.
 
 Este trabalho propõe um motor de recomendação que combina \textbf{Transfer Learning} sobre o BERTimbau com filtros estruturais rigorosos. O sistema opera em dois níveis complementares: (1) ranqueamento semântico das disciplinas por similaridade de cosseno entre o perfil do aluno e as ementas, via Sentence-BERT; e (2) aplicação sequencial de regras de pré-requisitos, orçamento de dificuldade e compatibilidade de horários, garantindo a viabilidade acadêmica das recomendações.
 
@@ -207,7 +207,7 @@ Um baseline de Regressão Logística foi treinado sobre três features puramente
 \section{Configuração Experimental}
 % ======================================================================
 
-O modelo Sentence-BERT foi carregado do Hugging Face Hub (\texttt{neuralmind/bert-base-portuguese-cased}) sem fine-tuning adicional para a tarefa de busca semântica. Os embeddings do corpus de 76 disciplinas são gerados uma única vez e armazenados em memória, permitindo busca em tempo de inferência inferior a 100 ms.
+O modelo Sentence-BERT foi carregado do Hugging Face Hub~\cite{wolf2020transformers} (\texttt{neuralmind/bert-base-portuguese-cased}) sem fine-tuning adicional para a tarefa de busca semântica. Os embeddings do corpus de 76 disciplinas são gerados uma única vez e armazenados em memória, permitindo busca em tempo de inferência inferior a 100 ms.
 
 Para o classificador BERT, foram executados 3 estágios progressivos com 1 época cada, batch size de 8, e learning rates de $5\times10^{-5}$, $3\times10^{-5}$ e $2\times10^{-5}$ respectivamente. O treinamento foi realizado em GPU T4 via Google Colab. As métricas de avaliação incluem acurácia e F1-score para o classificador, e Precision@10, Recall@10 e MRR (Mean Reciprocal Rank) para a busca semântica.
 
@@ -356,25 +356,20 @@ Devlin, J., Chang, M. W., Lee, K., \& Toutanova, K. (2019).
 BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.
 \textit{Proceedings of NAACL-HLT 2019}.
 
-\bibitem{reimers2019sentence}
-Reimers, N., \& Gurevych, I. (2019).
-Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.
-\textit{Proceedings of EMNLP-IJCNLP 2019}.
+\bibitem{vaswani2017attention}
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., \& Polosukhin, I. (2017).
+Attention Is All You Need.
+\textit{Proceedings of NeurIPS 2017}.
 
 \bibitem{souza2020bertimbau}
 Souza, F., Nogueira, R., \& Lotufo, R. (2020).
 BERTimbau: Pretrained BERT Models for Brazilian Portuguese.
 \textit{Proceedings of BRACIS 2020}.
 
-\bibitem{vaswani2017attention}
-Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., \& Polosukhin, I. (2017).
-Attention Is All You Need.
-\textit{Proceedings of NeurIPS 2017}.
-
-\bibitem{wolf2020transformers}
-Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., Cistac, P., Rault, T., Louf, R., Funtowicz, M., Davison, J., Shleifer, S., von Platen, P., Ma, C., Jernite, Y., Plu, J., Xu, C., Le Scao, T., Gugger, S., Drame, M., Lhoest, Q., \& Rush, A. M. (2020).
-Transformers: State-of-the-Art Natural Language Processing.
-\textit{Proceedings of EMNLP 2020: System Demonstrations}.
+\bibitem{reimers2019sentence}
+Reimers, N., \& Gurevych, I. (2019).
+Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks.
+\textit{Proceedings of EMNLP-IJCNLP 2019}.
 
 \bibitem{gees-grade}
 GEES UFMG. Grade Curricular — Engenharia de Sistemas.
@@ -391,6 +386,11 @@ Colegiado de Engenharia de Sistemas. Grade Horária 2026/1.
 \bibitem{drive-ppc}
 Colegiado de Engenharia de Sistemas. Documentação do Projeto Pedagógico do Curso.
 \url{https://drive.google.com/drive/folders/1v-z55BIyll1Z80KB1gPGVy0zqD8HEsD5}. Acesso em: jun. 2026.
+
+\bibitem{wolf2020transformers}
+Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., Cistac, P., Rault, T., Louf, R., Funtowicz, M., Davison, J., Shleifer, S., von Platen, P., Ma, C., Jernite, Y., Plu, J., Xu, C., Le Scao, T., Gugger, S., Drame, M., Lhoest, Q., \& Rush, A. M. (2020).
+Transformers: State-of-the-Art Natural Language Processing.
+\textit{Proceedings of EMNLP 2020: System Demonstrations}.
 
 \end{thebibliography}
 

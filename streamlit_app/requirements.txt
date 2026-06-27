@@ -1,0 +1,7 @@
+sentence-transformers>=3.0
+torch>=2.2
+transformers>=4.43
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5
+streamlit>=1.36

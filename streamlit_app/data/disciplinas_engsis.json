@@ -1,0 +1,1562 @@
+[
+  {
+    "codigo": "DCC217",
+    "nome": "MATEMÁTICA DISCRETA PARA ENGENHARIA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 1,
+    "pre_requisitos": [],
+    "area_conhecimento": "Computação",
+    "ciclo": "Básico Ciências",
+    "ementa": "Estudo de fundamentos de lógica; Técnicas de prova, indução matemática; Teoria de conjuntos, análise combinatória; Funções, recursão, relações em conjuntos e teoria dos grafos.",
+    "dificuldade": 5.25,
+    "trabalhosa": 4.91,
+    "dificuldade_geral": 5.08,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEX",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE630",
+    "nome": "INTRODUÇÃO A ENGENHARIA DE SISTEMAS",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 1,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Básico Ciências",
+    "ementa": "Integração do estudante à UFMG, à Escola de Engenharia e ao curso de Engenharia de Sistemas; Normas acadêmicas; Normas de segurança em laboratórios; Prevenção e combate a incêndios e desastres; Contextualização da Engenharia e da Engenharia de Sistemas; Aplicações da Engenharia e da Engenharia de Sistemas.",
+    "dificuldade": 1.45,
+    "trabalhosa": 3.21,
+    "dificuldade_geral": 2.33,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "MAT001",
+    "nome": "CALCULO DIFERENCIAL E INTEGRAL I",
+    "carga_horaria": 90,
+    "natureza": "OB",
+    "periodo_sugerido": 1,
+    "pre_requisitos": [],
+    "area_conhecimento": "Matemática",
+    "ciclo": "Básico Ciências",
+    "ementa": "Funções de R em R; Derivadas; Integrais; Aplicações.",
+    "dificuldade": 6.0,
+    "trabalhosa": 5.0,
+    "dificuldade_geral": 5.5,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "MAT038",
+    "nome": "GEOMETRIA ANALITICA E ALGEBRA LINEAR",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 1,
+    "pre_requisitos": [],
+    "area_conhecimento": "Matemática",
+    "ciclo": "Básico Ciências",
+    "ementa": "Álgebra vetorial; Retas e planos; Matrizes, sistemas lineares e determinantes; Espaço vetorial Rn; Autovalores e autovetores de matrizes; Diagonalização de matrizes simétricas.",
+    "dificuldade": 6.89,
+    "trabalhosa": 5.46,
+    "dificuldade_geral": 6.18,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "QUI628",
+    "nome": "QUÍMICA GERAL E",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 1,
+    "pre_requisitos": [],
+    "area_conhecimento": "Química",
+    "ciclo": "Básico Ciências",
+    "ementa": "Reações em solução aquosa e estequiometria; Termoquímica, cinética química, equilíbrio químico; Fundamentos de eletroquímica; Ligação iônica, ligação covalente, interações intermoleculares; Química aplicada a engenharia e geologia.",
+    "dificuldade": 4.21,
+    "trabalhosa": 4.58,
+    "dificuldade_geral": 4.39,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "DCC203",
+    "nome": "PROGRAMAÇÃO E DESENVOLVIMENTO DE SOFTWARE I",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 2,
+    "pre_requisitos": [],
+    "area_conhecimento": "Computação",
+    "ciclo": "Básico Ciências",
+    "ementa": "Introdução ao funcionamento de um computador e ao desenvolvimento de programas; Desenvolvimento de programas em uma linguagem de alto nível; Tipos de dados simples, apontadores, variáveis compostas homogêneas e heterogêneas; Entrada e saída; Estruturas de controle e repetição; Funções e ferramentas de modularização.",
+    "dificuldade": 4.57,
+    "trabalhosa": 5.57,
+    "dificuldade_geral": 5.07,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EMT122",
+    "nome": "INTRODUÇÃO À CIÊNCIA DOS MATERIAIS",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 2,
+    "pre_requisitos": [
+      "QUI628"
+    ],
+    "area_conhecimento": "Materiais",
+    "ciclo": "Básico Ciências",
+    "ementa": "Ligações químicas, tipos de materiais e suas características básicas; Estrutura cristalina e amorfa; Defeitos cristalinos; Diagramas de fases; Propriedades Mecânicas; Materiais Cerâmicos e Poliméricos.",
+    "dificuldade": 6.67,
+    "trabalhosa": 6.0,
+    "dificuldade_geral": 6.33,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "FIS065",
+    "nome": "FUNDAMENTOS DE MECANICA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 2,
+    "pre_requisitos": [
+      "MAT001"
+    ],
+    "area_conhecimento": "Física",
+    "ciclo": "Básico Ciências",
+    "ementa": "Cinemática e dinâmica da partícula; Sistemas de partículas; Cinemática e dinâmica de rotação; Leis de Conservação da Energia e dos Momentos Linear e Angular.",
+    "dificuldade": 5.88,
+    "trabalhosa": 4.96,
+    "dificuldade_geral": 5.42,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "MAT039",
+    "nome": "CÁLCULO DIFERENCIAL E INTEGRAL II",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 2,
+    "pre_requisitos": [
+      "MAT001"
+    ],
+    "area_conhecimento": "Matemática",
+    "ciclo": "Básico Ciências",
+    "ementa": "Coordenadas polares; Cônicas; Séries; Série e fórmula de Taylor; Diferenciabilidade de funções de várias variáveis.",
+    "dificuldade": 6.54,
+    "trabalhosa": 5.0,
+    "dificuldade_geral": 5.77,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "DCC204",
+    "nome": "PROGRAMAÇÃO E DESENVOLVIMENTO DE SOFTWARE II",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 3,
+    "pre_requisitos": [
+      "DCC203"
+    ],
+    "area_conhecimento": "Computação",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Programação estruturada e linguagem de programação modular; Metodologias de desenvolvimento de software; Compreensão, corretude e depuração de programas; Resolução de problemas de forma modular e eficiente.",
+    "dificuldade": 5.17,
+    "trabalhosa": 5.84,
+    "dificuldade_geral": 5.5,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "DCC218",
+    "nome": "INTRODUÇÃO A SISTEMAS COMPUTACIONAIS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 3,
+    "pre_requisitos": [
+      "DCC203"
+    ],
+    "area_conhecimento": "Computação",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Arquiteturas de redes de computadores; Aplicações e infraestrutura de redes; Conceitos de segurança; Processos, threads, sincronização, gerenciamento de memória, sistemas de arquivos; Tempo, nomes, replicação e consistência em Sistemas Distribuídos.",
+    "dificuldade": 3.0,
+    "trabalhosa": 9.0,
+    "dificuldade_geral": 6.0,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "FIS069",
+    "nome": "FUNDAMENTOS DE ELETROMAGNETISMO",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 3,
+    "pre_requisitos": [
+      "MAT039",
+      "FIS065"
+    ],
+    "area_conhecimento": "Física",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Carga elétrica, campo elétrico e a lei de Gauss; Potencial elétrico, capacitores e dielétricos; Corrente e resistência elétricas; Campo magnético e lei de Ampère; Lei de Faraday e indutância; Materiais magnéticos; Equações de Maxwell.",
+    "dificuldade": 6.68,
+    "trabalhosa": 5.14,
+    "dificuldade_geral": 5.91,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "MAT002",
+    "nome": "CALCULO DIFERENCIAL E INTEGRAL III",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 3,
+    "pre_requisitos": [
+      "MAT039"
+    ],
+    "area_conhecimento": "Matemática",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Integral dupla e tripla; Vetores aleatórios: distribuições marginais e condicionais; Momentos condicionais; Correlações parciais; Independência estocástica; Distribuições multivariadas; Transformação de variáveis aleatórias n-dimensionais; Função geratriz de momentos e Função característica.",
+    "dificuldade": 7.31,
+    "trabalhosa": 5.82,
+    "dificuldade_geral": 6.57,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE064",
+    "nome": "ANALISE DE CIRCUITOS ELETRICOS I",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 4,
+    "pre_requisitos": [
+      "FIS069"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Fontes de tensão e corrente dependentes e independentes; Leis fundamentais de circuitos; Circuitos resistivos; Métodos de análise de circuitos; Teoremas de rede; Circuitos com amplificador operacional ideal.",
+    "dificuldade": 4.77,
+    "trabalhosa": 4.54,
+    "dificuldade_geral": 4.65,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      }
+    ]
+  },
+  {
+    "codigo": "ELT124",
+    "nome": "SISTEMAS DIGITAIS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 4,
+    "pre_requisitos": [
+      "DCC217"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Sistemas de numeração; Álgebra Booleana; Portas lógicas; Circuitos combinacionais: análise, síntese e técnicas de minimização; Circuitos sequenciais síncronos e assíncronos; Análise, síntese e técnicas de minimização de circuitos sequenciais; Famílias de circuitos lógicos; Dispositivos lógicos programáveis; Gate arrays; Análise e projeto de sistemas digitais; Fundamentos de Linguagem de Descrição de Hardware e sua aplicação no projeto de Sistemas Digitais.",
+    "dificuldade": 6.33,
+    "trabalhosa": 5.47,
+    "dificuldade_geral": 5.9,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EST773",
+    "nome": "FUNDAMENTOS DE ESTATÍSTICA E CIÊNCIA DE DADOS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 4,
+    "pre_requisitos": [
+      "MAT001"
+    ],
+    "area_conhecimento": "Estatística",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Introdução à Estatística e Ciência de Dados; Visualização de dados: tipos de variáveis, gráficos e tabelas, medidas de posição e variabilidade; Fundamentos de probabilidade e modelos probabilísticos; Tomadas de decisão com base em evidências: estimação pontual e intervalar, conceitos de testes de hipóteses; Prática Computacional.",
+    "dificuldade": 4.27,
+    "trabalhosa": 3.73,
+    "dificuldade_geral": 4.0,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "FIS152",
+    "nome": "FUNDAMENTOS DE MECÂNICA DOS FLUIDOS E TERMODINÂMICA",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 4,
+    "pre_requisitos": [
+      "FIS065"
+    ],
+    "area_conhecimento": "Física",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Temperatura e dilatação; Modelo cinético do gás ideal; Calor e a primeira lei da termodinâmica; Entropia e a segunda lei da termodinâmica; Estática e dinâmica de fluidos; Equação de Bernoulli.",
+    "dificuldade": 6.15,
+    "trabalhosa": 5.23,
+    "dificuldade_geral": 5.69,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "MAT015",
+    "nome": "EQUAÇÕES DIFERENCIAIS A",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 4,
+    "pre_requisitos": [
+      "MAT039"
+    ],
+    "area_conhecimento": "Matemática",
+    "ciclo": "Básico Engenharia",
+    "ementa": "Equações Diferenciais Ordinárias de 1a e 2a Ordens; Soluções de Equações Diferenciais em Séries de Potências; Sistemas de Equações Diferenciais Lineares; Transformada de Laplace; Séries de Fourier; Equações Diferenciais Parciais.",
+    "dificuldade": 7.0,
+    "trabalhosa": 5.93,
+    "dificuldade_geral": 6.47,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE028",
+    "nome": "LABORATORIO DE CIRCUITOS ELETRICOS I",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [
+      "ELE064"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Organização e Segurança em laboratórios; Medição de grandezas elétricas; Experimentos básicos com elementos de circuitos (resistivos, fontes dependentes, capacitores, indutores); Circuitos em regime transitório e em regime permanente senoidal; Circuitos com Amplificadores Operacionais.",
+    "dificuldade": 4.6,
+    "trabalhosa": 5.4,
+    "dificuldade_geral": 5.0,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE065",
+    "nome": "ANALISE DE CIRCUITOS ELETRICOS II",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [
+      "ELE064"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Indutância, capacitância e indutância mútua; Circuitos de primeira ordem (RC, RL e outros circuitos); Circuitos de segunda ordem (RLC série, RLC paralelo e outros circuitos); Excitação senoidal e fasores; Análise em Regime permanente senoidal; Potência em regime permanente senoidal.",
+    "dificuldade": 6.29,
+    "trabalhosa": 4.92,
+    "dificuldade_geral": 5.6,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE631",
+    "nome": "ANÁLISE, PROJETO E PROGRAMAÇÃO ORIENTADOS A OBJETOS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [
+      "DCC204"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Gerenciamento da Complexidade; Introdução a Análise e Projeto Orientados a Objetos; Engenharia de Requisitos; Modelagem Orientada a Objetos; Implementação dos Conceitos em uma Linguagem OO; Introdução aos Padrões de Projeto OO; Introdução à Modelagem Estrutural, Comportamental e de Arquitetura.",
+    "dificuldade": 4.29,
+    "trabalhosa": 5.86,
+    "dificuldade_geral": 5.07,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELT029",
+    "nome": "LABORATORIO DE SISTEMAS DIGITAIS",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [
+      "ELT124"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Aulas práticas envolvendo circuitos combinacionais, circuitos sequenciais síncronos e assíncronos e dispositivos lógicos programáveis; Gate Arrays; Análise e projeto de sistemas digitais.",
+    "dificuldade": 5.18,
+    "trabalhosa": 7.68,
+    "dificuldade_geral": 6.43,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELT084",
+    "nome": "DISPOSITIVOS E CIRCUITOS ELETRONICOS BASICOS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [
+      "ELE064"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Introdução à Eletrônica; Circuitos Eletrônicos com Amplificadores Operacionais ideais e reais; Junção PN; Diodos Retificadores e Zener: característica, circuitos com diodos e aplicações; Transistores (FET e BJT): características, modelos, polarização, análises; Funcionamento dos transistores como chaves; Conversores A/D e D/A: conceitos básicos; Representação gráfica de circuitos eletrônicos e simulação.",
+    "dificuldade": 6.4,
+    "trabalhosa": 6.2,
+    "dificuldade_geral": 6.3,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELT123",
+    "nome": "ARQUITETURA E ORGANIZAÇÃO DE COMPUTADORES",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [
+      "ELT124"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Arquitetura de microprocessadores: unidade de controle, memória, entrada e saída; Programação de microprocessadores: instruções, modos de endereçamento, Assembly e C; Dispositivos periféricos, interrupção, acesso direto à memória; Barramentos-padrão; Ferramentas para análise, desenvolvimento e depuração; Microprocessadores comerciais; Projetos de aplicações com microprocessadores e interfaces de E/S; Multiprocessamento.",
+    "dificuldade": 7.55,
+    "trabalhosa": 6.8,
+    "dificuldade_geral": 7.17,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ESA019",
+    "nome": "CIÊNCIAS DO AMBIENTE",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 5,
+    "pre_requisitos": [],
+    "area_conhecimento": "Meio Ambiente",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Meio Ambiente e Engenharia; Causas e efeitos da poluição hídrica, atmosférica e do solo; Processos e equipamentos usados na prevenção e no controle da poluição; Noções de Legislação Ambiental; Sistema de Gestão Ambiental e Certificação; Produção Mais Limpa (P+L); Engenharia e Sustentabilidade.",
+    "dificuldade": 2.2,
+    "trabalhosa": 4.8,
+    "dificuldade_geral": 3.5,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE050",
+    "nome": "MODELAGEM E SIMULAÇÃO MULTIFÍSICA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 6,
+    "pre_requisitos": [
+      "MAT015"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Modelagem de Sistemas Físicos usando ODEs e PDEs; Exemplos de aplicações: Transferência de Calor, Eletromagnetismo, Análise Acústica, Mecânica; Introdução a métodos numéricos para a simulação de ODEs e PDEs (Diferenças finitas e Elementos Finitos).",
+    "dificuldade": 7.67,
+    "trabalhosa": 8.33,
+    "dificuldade_geral": 8.0,
+    "horarios": [
+      {
+        "dia": "SEG",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE077",
+    "nome": "OTIMIZACAO NAO LINEAR",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 6,
+    "pre_requisitos": [
+      "MAT038"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Formulação de problemas de otimização; Propriedades geométricas dos espaços de busca; Condições de otimalidade; Métodos determinísticos para otimização irrestrita; Métodos sem derivadas; Métodos para otimização restrita.",
+    "dificuldade": 4.43,
+    "trabalhosa": 4.86,
+    "dificuldade_geral": 4.64,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE082",
+    "nome": "PESQUISA OPERACIONAL",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 6,
+    "pre_requisitos": [
+      "MAT038"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Programação linear e suas aplicações; Método simplex; Análise de sensibilidade e dualidade; Otimização em redes; Programação dinâmica; Otimização combinatória e heurísticas; Modelagem.",
+    "dificuldade": 5.2,
+    "trabalhosa": 6.4,
+    "dificuldade_geral": 5.8,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELT080",
+    "nome": "LABORATORIO DE CIRCUITOS ELETRONICOS E PROJETOS",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": 6,
+    "pre_requisitos": [
+      "ELT084"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Utilização dos equipamentos e instrumentos de Laboratório; Análise e Projetos com Amplificadores Operacionais Reais; Análise e Projeto de circuitos com Diodos retificadores e Zener; Análise e Projeto de circuitos com Transistores bipolares e MOSFETs.",
+    "dificuldade": 3.75,
+    "trabalhosa": 7.33,
+    "dificuldade_geral": 5.54,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      }
+    ]
+  },
+  {
+    "codigo": "ELT136",
+    "nome": "FUNDAMENTOS DE SISTEMAS DINÂMICOS E CONTROLE",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 6,
+    "pre_requisitos": [
+      "MAT015"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia",
+    "ementa": "Sistemas de controle fundamentais e tecnologia de sistemas de controle; Sensores, atuadores, modelagem física de sistemas; Técnicas operacionais para sistemas lineares em tempo contínuo; Transformadas de Laplace; Resposta via funções de transferência; Estabilidade; Especificações de desempenho; Projeto de controladores via funções de transferência; Resposta em frequência; Não linearidades simples.",
+    "dificuldade": 9.0,
+    "trabalhosa": 9.0,
+    "dificuldade_geral": 9.0,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE017",
+    "nome": "CONFIABILIDADE DE SISTEMAS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 7,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Conceitos Básicos de Estatística e Probabilidade; Engenharia de Confiabilidade: Confiabilidade, Manutenabilidade e Disponibilidade; Engenharia de Manutenção; FMEA e FTA; Manutenção Centrada na Confiabilidade; Estudo de caso de um processo industrial / comercial.",
+    "dificuldade": 4.75,
+    "trabalhosa": 4.0,
+    "dificuldade_geral": 4.38,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEG",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE046",
+    "nome": "SISTEMAS A EVENTOS DISCRETOS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 7,
+    "pre_requisitos": [
+      "DCC217"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Fundamentos de Sistemas a Eventos Discretos; Modelagem e análise utilizando autômatos e redes de Petri; Síntese e implementação de controladores; Abordagem temporizada.",
+    "dificuldade": 3.67,
+    "trabalhosa": 4.33,
+    "dificuldade_geral": 4.0,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE632",
+    "nome": "PROCESSOS E MÉTODOS EM ENGENHARIA DE SISTEMAS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 7,
+    "pre_requisitos": [
+      "ELE630"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Visão holística do sistema socioeconômico atual e seus principais processos; Abordagens de ciclo de vida para sistemas; Processos de ciclo de vida para sistemas segundo normas e referências técnicas; Métodos relacionados a estes processos; Aplicação do conteúdo visto junto à comunidade externa.",
+    "dificuldade": 2.56,
+    "trabalhosa": 3.56,
+    "dificuldade_geral": 3.06,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE633",
+    "nome": "LABORATORIO DE SISTEMAS I",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 7,
+    "pre_requisitos": [
+      "ELE632"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Ciclo de vida de sistemas: definição, requisitos, projeto, implementação, verificação, integração e validação; Engenharia Baseada em Modelos; SysML; Desenho universal e sua aplicação em projetos de engenharia; Desenvolvimento de um projeto de engenharia com a comunidade externa (extensão).",
+    "dificuldade": 3.17,
+    "trabalhosa": 5.17,
+    "dificuldade_geral": 4.17,
+    "horarios": [
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE048",
+    "nome": "FUNDAMENTOS DE INTELIGÊNCIA ARTIFICIAL",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 8,
+    "pre_requisitos": [
+      "EST773"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Inteligência artificial e agentes inteligentes; Arquiteturas de agentes inteligentes; Representação do conhecimento; Algoritmos e Heurísticas de busca; Algoritmo A*; Redes de restrições e satisfação de restrições; Proposições e inferência; Raciocínio com incertezas e Raciocínio baseado em casos; Planejamento com incertezas; Redes de decisão e Processos de decisão markovianos; Teoria de jogos; Aspectos sociais e éticos da inteligência artificial.",
+    "dificuldade": 3.33,
+    "trabalhosa": 5.0,
+    "dificuldade_geral": 4.17,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE049",
+    "nome": "APRENDIZADO DE MÁQUINA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 8,
+    "pre_requisitos": [
+      "EST773"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Princípios Estatísticos do Aprendizado de Máquina; Análise Exploratória e Métodos de Visualização de Dados; Modelos de Regressão Linear e Logística; Métodos de Correlação e Relações Causais; Partição de Dados e Clustering; Métodos de amostragem; Classificadores e Regressores baseados em Árvores.",
+    "dificuldade": 4.0,
+    "trabalhosa": 6.0,
+    "dificuldade_geral": 5.0,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE051",
+    "nome": "LABORATORIO DE GERENCIAMENTO DE SISTEMAS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 8,
+    "pre_requisitos": [
+      "ELE632"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Ferramentas e técnicas para o gerenciamento de sistemas; Processos de gestão: projetos, operações, aquisição, qualidade, riscos, etc.; Engenharia concorrente; Análise de questões étnico-raciais e de direitos humanos; Aplicação do conteúdo visto junto à comunidade externa.",
+    "dificuldade": 1.67,
+    "trabalhosa": 5.0,
+    "dificuldade_geral": 3.33,
+    "horarios": [
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE634",
+    "nome": "LABORATORIO DE SISTEMAS II",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 8,
+    "pre_requisitos": [
+      "ELE633"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Modelos caixa-preta; Otimização e problemas inversos; Síntese de sistemas por otimização; Desenvolvimento de um projeto de engenharia com a comunidade externa (extensão).",
+    "dificuldade": 2.75,
+    "trabalhosa": 6.5,
+    "dificuldade_geral": 4.62,
+    "horarios": [
+      {
+        "dia": "SEX",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "SEX",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "ELE635",
+    "nome": "LABORATORIO DE SISTEMAS III",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": 9,
+    "pre_requisitos": [
+      "ELE634"
+    ],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Profissional Engenharia de Sistemas",
+    "ementa": "Desenvolvimento de um projeto de engenharia envolvendo sistemas discretos com a comunidade externa (extensão).",
+    "dificuldade": 4.33,
+    "trabalhosa": 8.33,
+    "dificuldade_geral": 6.33,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE018",
+    "nome": "TRABALHO DE CONCLUSAO DE CURSO I",
+    "carga_horaria": 90,
+    "natureza": "OB",
+    "periodo_sugerido": 10,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Integrador",
+    "ementa": "Metodologias científico-tecnológicas e ferramentas de apoio; Ferramentas de apoio à escrita científica e à pesquisa e gerenciamento bibliográfico; Elaboração das etapas iniciais de um projeto completo de engenharia; Concepção, avaliação de alternativas, seleção e especificação da solução; Elaboração de documentação preliminar com discussão sobre humanidades e aspectos técnicos.",
+    "dificuldade": 4.67,
+    "trabalhosa": 10.0,
+    "dificuldade_geral": 7.33,
+    "horarios": []
+  },
+  {
+    "codigo": "EEE052",
+    "nome": "TRABALHO DE CONCLUSAO DE CURSO I",
+    "carga_horaria": 90,
+    "natureza": "OB",
+    "periodo_sugerido": 10,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Integrador",
+    "ementa": "Metodologias científico-tecnológicas e ferramentas de apoio; Ferramentas de apoio à escrita científica e à pesquisa e gerenciamento bibliográfico; Elaboração das etapas iniciais de um projeto completo de engenharia; Concepção, avaliação de alternativas, seleção e especificação da solução; Elaboração de documentação preliminar com discussão sobre humanidades e aspectos técnicos.",
+    "dificuldade": 4.67,
+    "trabalhosa": 10.0,
+    "dificuldade_geral": 7.33,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE019",
+    "nome": "TRABALHO DE CONCLUSAO DE CURSO II",
+    "carga_horaria": 90,
+    "natureza": "OB",
+    "periodo_sugerido": 11,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Integrador",
+    "ementa": "Redação da monografia final; Análise dos resultados obtidos; Preparação e realização da defesa oral do Trabalho de Conclusão de Curso perante banca examinadora.",
+    "dificuldade": 4.67,
+    "trabalhosa": 10.0,
+    "dificuldade_geral": 7.33,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE020",
+    "nome": "ESTAGIO SUPERVISIONADO EM ENGENHARIA DE SISTEMAS",
+    "carga_horaria": 165,
+    "natureza": "OB",
+    "periodo_sugerido": 11,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Integrador",
+    "ementa": "Estágio supervisionado em empresa ou instituição pública ou privada, com supervisão docente e elaboração de relatório técnico final.",
+    "dificuldade": 2.2,
+    "trabalhosa": 4.2,
+    "dificuldade_geral": 3.2,
+    "horarios": [
+      {
+        "dia": "TER",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUA",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "QUI",
+        "turno": "19:00-20:40"
+      },
+      {
+        "dia": "TER",
+        "turno": "20:55-22:35"
+      },
+      {
+        "dia": "QUA",
+        "turno": "20:55-22:35"
+      },
+      {
+        "dia": "QUI",
+        "turno": "20:55-22:35"
+      }
+    ]
+  },
+  {
+    "codigo": "EEE053",
+    "nome": "TRABALHO DE CONCLUSAO DE CURSO II",
+    "carga_horaria": 90,
+    "natureza": "OB",
+    "periodo_sugerido": 11,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Integrador",
+    "ementa": "Redação da monografia final; Análise dos resultados obtidos; Preparação e realização da defesa oral do Trabalho de Conclusão de Curso perante banca examinadora.",
+    "dificuldade": 4.67,
+    "trabalhosa": 10.0,
+    "dificuldade_geral": 7.33,
+    "horarios": []
+  },
+  {
+    "codigo": "EEE054",
+    "nome": "ESTAGIO SUPERVISIONADO EM ENGENHARIA DE SISTEMAS",
+    "carga_horaria": 165,
+    "natureza": "OB",
+    "periodo_sugerido": 11,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Integrador",
+    "ementa": "Estágio supervisionado em empresa ou instituição pública ou privada, com supervisão docente e elaboração de relatório técnico final.",
+    "dificuldade": 2.2,
+    "trabalhosa": 4.2,
+    "dificuldade_geral": 3.2,
+    "horarios": []
+  },
+  {
+    "codigo": "DCC033",
+    "nome": "ANALISE NUMERICA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Computação",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de analise numerica.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "DIT001",
+    "nome": "DIREITO E LEGISLACAO",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Ciências Sociais e Direito",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de direito e legislacao.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ECN075",
+    "nome": "ECONOMIA PARA ENGENHARIA",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Economia",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de economia para engenharia.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EEE006",
+    "nome": "TECNOLOGIA DISPOSITIVOS SEMICONDUTORES",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de tecnologia dispositivos semicondutores.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EEE024",
+    "nome": "FUNDAMENTOS DE ENERGIA ALTERNATIVA",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de fundamentos de energia alternativa.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EEE057",
+    "nome": "LABORATÓRIO DE EMPREENDEDORISMO E INOVAÇÃO",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Atividades práticas de laboratório relacionadas a laboratório de empreendedorismo e inovação.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE042",
+    "nome": "PROCESSAMENTOS DE SINAIS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de processamentos de sinais.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE045",
+    "nome": "GERAÇÃO DE ENERGIA ELÉTRICA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de geração de energia elétrica.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE049",
+    "nome": "ANÁLISE DE SISTEMAS ELÉTRICOS POTÊNCIA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de análise de sistemas elétricos potência.",
+    "dificuldade": 4.77,
+    "trabalhosa": 4.54,
+    "dificuldade_geral": 4.65,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE055",
+    "nome": "PLANEJAMENTO DE SISTEMAS DE ENERGIA ELÉTRICA",
+    "carga_horaria": 45,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de planejamento de sistemas de energia elétrica.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE059",
+    "nome": "FUNDAMENTOS DE ENGENHARIA BIOMÉDICA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de fundamentos de engenharia biomédica.",
+    "dificuldade": 3.33,
+    "trabalhosa": 5.0,
+    "dificuldade_geral": 4.17,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE075",
+    "nome": "SISTEMAS NEBULOSOS",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de sistemas nebulosos.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ELE641",
+    "nome": "ENGENHARIA DE REABILITAÇÃO E TECNOLOGIAS ASSISTIVAS",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de engenharia de reabilitação e tecnologias assistivas.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ELT135",
+    "nome": "INTRODUÇÃO AO RECONHECIMENTO DE PADRÕES",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Elétrica e Sistemas",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de introdução ao reconhecimento de padrões.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA058",
+    "nome": "MANUTENÇÃO DE AERONAVES II",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de manutenção de aeronaves ii.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA062",
+    "nome": "MANUTENÇÃO DE AERONAVES I",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de manutenção de aeronaves i.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA083",
+    "nome": "DESENHO MECÂNICO",
+    "carga_horaria": 45,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de desenho mecânico.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA092",
+    "nome": "METROLOGIA",
+    "carga_horaria": 45,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de metrologia.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA243",
+    "nome": "PROJETO DE SISTEMAS AEROESPACIAIS",
+    "carga_horaria": 75,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Desenvolvimento de projeto prático em projeto de sistemas aeroespaciais.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA251",
+    "nome": "MECÂNICA ORBITAL",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de mecânica orbital.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMA263",
+    "nome": "INTRODUÇÃO À ENGENHARIA AEROESPACIAL",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Mecânica/Aeroespacial",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de introdução à engenharia aeroespacial.",
+    "dificuldade": 1.45,
+    "trabalhosa": 3.21,
+    "dificuldade_geral": 2.33,
+    "horarios": []
+  },
+  {
+    "codigo": "EMC029",
+    "nome": "SELEÇÃO DE MATERIAIS",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Materiais",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de seleção de materiais.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EMN014",
+    "nome": "NOÇÕES DE MINERAÇÃO",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Outros",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de noções de mineração.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ENG110",
+    "nome": "TÓPICOS EM ENGENHARIA DE SISTEMAS II - Introdução ao Controle Automático de Aeronaves (ELT072)",
+    "carga_horaria": 30,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia (Tópicos Especiais)",
+    "ciclo": "Optativa",
+    "ementa": "Estudo de tópicos avançados em tópicos em engenharia de sistemas ii - introdução ao controle automático de aeronaves (elt072).",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ENG121",
+    "nome": "TÓPICOS EM ENGENHARIA DE SISTEMAS IV - Fundamentos de Redes de Comunicação (ELT036)",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia (Tópicos Especiais)",
+    "ciclo": "Optativa",
+    "ementa": "Estudo de tópicos avançados em tópicos em engenharia de sistemas iv - fundamentos de redes de comunicação (elt036).",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ENG195",
+    "nome": "TÓPICOS EM FORMAÇÃO AVANÇADA IV - Aplicações de Eletrônica de Potência em Sistemas Elétricos de Potência",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia (Tópicos Especiais)",
+    "ciclo": "Optativa",
+    "ementa": "Estudo de tópicos avançados em tópicos em formação avançada iv - aplicações de eletrônica de potência em sistemas elétricos de potência.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "ENU006",
+    "nome": "FUNDAMENTOS DE ENERGIA NUCLEAR",
+    "carga_horaria": 45,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia Nuclear",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de fundamentos de energia nuclear.",
+    "dificuldade": 5.88,
+    "trabalhosa": 4.96,
+    "dificuldade_geral": 5.42,
+    "horarios": []
+  },
+  {
+    "codigo": "EPD073",
+    "nome": "PROJETO DO PRODUTO",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia de Produção",
+    "ciclo": "Optativa",
+    "ementa": "Desenvolvimento de projeto prático em projeto do produto.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EPD116",
+    "nome": "FUNDAMENTOS DE ENGENHARIA DE PRODUÇÃO",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia de Produção",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de fundamentos de engenharia de produção.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "EPD117",
+    "nome": "ORGANIZAÇÃO INDUSTRIAL PARA ENGENHARIA",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Engenharia de Produção",
+    "ciclo": "Optativa",
+    "ementa": "Estudo dos fundamentos e aplicações de organização industrial para engenharia.",
+    "dificuldade": null,
+    "trabalhosa": null,
+    "dificuldade_geral": null,
+    "horarios": []
+  },
+  {
+    "codigo": "MAT016",
+    "nome": "EQUAÇÕES DIFERENCIAIS B",
+    "carga_horaria": 60,
+    "natureza": "OB",
+    "periodo_sugerido": null,
+    "pre_requisitos": [],
+    "area_conhecimento": "Matemática",
+    "ciclo": "Optativa",
+    "ementa": "Equações Diferenciais Ordinárias de 1a e 2a Ordens; Soluções de Equações Diferenciais em Séries de Potências; Sistemas de Equações Diferenciais Lineares; Transformada de Laplace; Séries de Fourier; Equações Diferenciais Parciais.",
+    "dificuldade": 6.43,
+    "trabalhosa": 5.86,
+    "dificuldade_geral": 6.14,
+    "horarios": []
+  }
+]

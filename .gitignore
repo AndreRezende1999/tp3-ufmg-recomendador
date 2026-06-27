@@ -16,3 +16,4 @@ outputs/
 notebooks/data/
 src/*.egg-info/
 *.egg-info/
+notebooks/disciplinas_engsis.json
